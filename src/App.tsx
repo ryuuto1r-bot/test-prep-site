@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, RotateCcw, Shuffle, BookOpen } from 'lucide-react';
+import { ChevronLeft, ChevronRight, RotateCcw, Shuffle, BookOpen, ListChecks } from 'lucide-react';
 
 // フラッシュカードの全データ
 const flashcardsData = [
@@ -150,31 +150,111 @@ const flashcardsData = [
   { id: 133, category: "単語・アクセント (第2章)", q: "【アクセント・和訳】\nshallow", a: "SHAL-low", t: "浅い", e: "第1音節(shal-)にアクセントがきます。" }
 ];
 
+const orderCards = flashcardsData.filter(card => card.q.includes('[並べ替え]'));
+
+const shuffleArray = (items) => [...items].sort(() => Math.random() - 0.5);
+
+const normalizeText = (text) =>
+  text
+    .toLowerCase()
+    .replace(/[’]/g, "'")
+    .replace(/[.,!?]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const orderChoicesByAnswer = (choices, answerText) => {
+  const normalizedAnswer = normalizeText(answerText);
+  return [...choices].sort((a, b) => {
+    const aIndex = normalizedAnswer.indexOf(normalizeText(a));
+    const bIndex = normalizedAnswer.indexOf(normalizeText(b));
+    const safeA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+    const safeB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+    return safeA - safeB;
+  });
+};
+
+const parseOrderCard = (card) => {
+  const rawLines = card.q.split('\n').map(line => line.trim()).filter(Boolean);
+  const lines = rawLines.filter(line => line !== '[並べ替え]');
+  const englishIndex = lines.findIndex(line => line.includes('[') && line.includes('/'));
+  const jpLines = englishIndex >= 0 ? lines.slice(0, englishIndex) : [card.t];
+  const englishText = englishIndex >= 0 ? lines.slice(englishIndex).join(' ') : card.q;
+  const answerGroups = [...card.a.matchAll(/\[([^\]]+)\]/g)].map(match => match[1].trim());
+  const choiceGroups = [...englishText.matchAll(/\[([^\]]+)\]/g)].map((match, index) => {
+    const words = match[1].split('/').map(word => word.trim()).filter(Boolean);
+    const correctText = answerGroups[index] || '';
+    return {
+      words,
+      correct: orderChoicesByAnswer(words, correctText),
+      correctText,
+    };
+  });
+
+  return {
+    jpLines,
+    templateParts: englishText.split(/\[[^\]]+\]/g),
+    groups: choiceGroups,
+  };
+};
+
+const areArraysEqual = (left, right) =>
+  left.length === right.length && left.every((item, index) => item === right[index]);
+
 export default function App() {
-  // ★追加: タブ（カテゴリ）のリストを生成
-  const categories = ["すべて", ...new Set(flashcardsData.map(c => c.category))];
+  const [studyMode, setStudyMode] = useState("flashcard");
   const [selectedCategory, setSelectedCategory] = useState("すべて");
   
   const [cards, setCards] = useState(flashcardsData);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [selectedGroups, setSelectedGroups] = useState([]);
+  const [availableGroups, setAvailableGroups] = useState([]);
+  const [orderResult, setOrderResult] = useState(null);
   
   // スワイプ操作用の状態
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   const minSwipeDistance = 50;
 
+  const activeBaseCards = studyMode === "order" ? orderCards : flashcardsData;
+  const categories = ["すべて", ...new Set(activeBaseCards.map(c => c.category))];
+
   // カードを切り替えたら表面に戻す
   useEffect(() => {
     setIsFlipped(false);
-  }, [currentIndex, cards]);
+    setOrderResult(null);
+    if (studyMode === "order") {
+      setupOrderQuestion(cards[currentIndex]);
+    }
+  }, [currentIndex, cards, studyMode]);
+
+  const getCardsFor = (category, mode = studyMode) => {
+    const base = mode === "order" ? orderCards : flashcardsData;
+    return category === "すべて" ? [...base] : base.filter(c => c.category === category);
+  };
+
+  const setupOrderQuestion = (card) => {
+    if (!card) return;
+    const parsed = parseOrderCard(card);
+    setSelectedGroups(parsed.groups.map(() => []));
+    setAvailableGroups(parsed.groups.map(group => shuffleArray(group.words)));
+    setOrderResult(null);
+  };
+
+  const handleModeChange = (mode) => {
+    setStudyMode(mode);
+    setSelectedCategory("すべて");
+    const nextCards = getCardsFor("すべて", mode);
+    setCards(nextCards);
+    setCurrentIndex(0);
+    setIsFlipped(false);
+    if (mode === "order") setupOrderQuestion(nextCards[0]);
+  };
 
   // ★追加: タブがクリックされた時の処理
   const handleTabChange = (category) => {
     setSelectedCategory(category);
-    const newCards = category === "すべて" 
-      ? [...flashcardsData] 
-      : flashcardsData.filter(c => c.category === category);
+    const newCards = getCardsFor(category);
     setCards(newCards);
     setCurrentIndex(0);
   };
@@ -197,19 +277,15 @@ export default function App() {
 
   // ★修正: 選択中のカテゴリ内でシャッフルするように変更
   const handleShuffle = () => {
-    const currentPool = selectedCategory === "すべて" 
-      ? [...flashcardsData] 
-      : flashcardsData.filter(c => c.category === selectedCategory);
-    const shuffled = currentPool.sort(() => Math.random() - 0.5);
+    const currentPool = getCardsFor(selectedCategory);
+    const shuffled = shuffleArray(currentPool);
     setCards(shuffled);
     setCurrentIndex(0);
   };
 
   // ★修正: 選択中のカテゴリ内でリセットするように変更
   const handleReset = () => {
-    const currentPool = selectedCategory === "すべて" 
-      ? [...flashcardsData] 
-      : flashcardsData.filter(c => c.category === selectedCategory);
+    const currentPool = getCardsFor(selectedCategory);
     setCards(currentPool);
     setCurrentIndex(0);
   };
@@ -237,11 +313,50 @@ export default function App() {
     }
   };
 
+  const handleOrderWordClick = (groupIndex, word, fromAvailable, index) => {
+    if (orderResult) return;
+
+    if (fromAvailable) {
+      setSelectedGroups(selectedGroups.map((group, i) => (
+        i === groupIndex ? [...group, word] : group
+      )));
+      setAvailableGroups(availableGroups.map((group, i) => (
+        i === groupIndex ? group.filter((_, wordIndex) => wordIndex !== index) : group
+      )));
+    } else {
+      setAvailableGroups(availableGroups.map((group, i) => (
+        i === groupIndex ? [...group, word] : group
+      )));
+      setSelectedGroups(selectedGroups.map((group, i) => (
+        i === groupIndex ? group.filter((_, wordIndex) => wordIndex !== index) : group
+      )));
+    }
+  };
+
+  const checkOrderAnswer = () => {
+    const parsed = parseOrderCard(currentCard);
+    const isCorrect = parsed.groups.every((group, index) =>
+      areArraysEqual(selectedGroups[index] || [], group.correct)
+    );
+    setOrderResult(isCorrect ? "correct" : "incorrect");
+  };
+
+  const showOrderAnswer = () => {
+    const parsed = parseOrderCard(currentCard);
+    setSelectedGroups(parsed.groups.map(group => group.correct));
+    setAvailableGroups(parsed.groups.map(() => []));
+    setOrderResult("shown");
+  };
+
   const currentCard = cards[currentIndex];
   // カードが存在しない場合（安全対策）
   if (!currentCard) return null;
 
   const progress = ((currentIndex + 1) / cards.length) * 100;
+  const currentOrder = studyMode === "order" ? parseOrderCard(currentCard) : null;
+  const isOrderComplete = currentOrder
+    ? currentOrder.groups.every((_, index) => (availableGroups[index] || []).length === 0)
+    : false;
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center py-8 px-4 font-sans text-slate-800">
@@ -252,6 +367,29 @@ export default function App() {
           <BookOpen className="text-indigo-600 w-6 h-6" />
           <h1 className="text-xl font-bold text-slate-800">技術英語 フラッシュカード</h1>
         </div>
+      </div>
+
+      <div className="w-full max-w-md mb-4 grid grid-cols-2 gap-2 rounded-2xl bg-white p-1 shadow-sm border border-slate-200">
+        <button
+          onClick={() => handleModeChange("flashcard")}
+          className={`flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold transition-colors ${
+            studyMode === "flashcard"
+              ? 'bg-indigo-600 text-white shadow-sm'
+              : 'text-slate-600 hover:bg-slate-50'
+          }`}
+        >
+          <BookOpen className="w-4 h-4" /> カード
+        </button>
+        <button
+          onClick={() => handleModeChange("order")}
+          className={`flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold transition-colors ${
+            studyMode === "order"
+              ? 'bg-amber-500 text-white shadow-sm'
+              : 'text-slate-600 hover:bg-slate-50'
+          }`}
+        >
+          <ListChecks className="w-4 h-4" /> 並べ替え
+        </button>
       </div>
 
       {/* ★追加: カテゴリ選択用のスクロール可能なタブ */}
@@ -301,54 +439,174 @@ export default function App() {
         </div>
       </div>
 
-      {/* フラッシュカード本体 */}
-      <div 
-        className="w-full max-w-md bg-white rounded-2xl shadow-lg border border-slate-100 min-h-[320px] cursor-pointer relative transition-transform duration-300 transform hover:scale-[1.01]"
-        onClick={handleFlip}
-        onTouchStart={onTouchStartHandler}
-        onTouchMove={onTouchMoveHandler}
-        onTouchEnd={onTouchEndHandler}
-      >
-        <div className="absolute top-4 left-4 right-4 flex justify-center">
-           <span className="text-xs font-semibold text-indigo-500 bg-indigo-50 px-3 py-1 rounded-full text-center">
-             {currentCard.category}
-           </span>
-        </div>
+      {studyMode === "order" && currentOrder ? (
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-lg border border-slate-100 min-h-[430px] relative">
+          <div className="absolute top-4 left-4 right-4 flex justify-center">
+            <span className="text-xs font-semibold text-amber-600 bg-amber-50 px-3 py-1 rounded-full text-center">
+              {currentCard.category}
+            </span>
+          </div>
 
-        <div className="p-6 pt-16 h-full flex flex-col justify-center items-center text-center">
-          {!isFlipped ? (
-            // 表面（問題）
-            <div className="w-full animate-in fade-in zoom-in-95 duration-200">
-              <span className="block text-sm font-bold text-slate-400 mb-4 tracking-widest">QUESTION</span>
-              {currentCard.q.split('\n').map((line, idx) => (
-                <p key={idx} className={`text-lg font-medium text-slate-700 leading-relaxed ${idx === 0 ? 'mb-4' : ''}`}>
-                  {line}
-                </p>
+          <div className="p-5 pt-16">
+            <span className="block text-sm font-bold text-slate-400 mb-3 tracking-widest text-center">ORDER</span>
+            <div className="mb-4 rounded-xl bg-amber-50/70 p-3 text-sm font-medium leading-relaxed text-slate-700">
+              {currentOrder.jpLines.map((line, index) => (
+                <p key={index}>{line}</p>
               ))}
-              <p className="text-slate-400 text-sm mt-8 animate-pulse">タップして解答を見る</p>
             </div>
-          ) : (
-            // 裏面（解答・解説）
-            <div className="w-full animate-in fade-in zoom-in-95 duration-200">
-              <span className="block text-sm font-bold text-emerald-500 mb-2 tracking-widest">ANSWER</span>
-              <p className="text-2xl font-bold text-slate-800 mb-6 bg-emerald-50 py-2 px-4 rounded-lg inline-block">
-                {currentCard.a}
-              </p>
-              
-              <div className="text-left w-full space-y-4">
-                <div>
-                  <h3 className="text-xs font-bold text-slate-400 uppercase mb-1 border-b pb-1">和訳</h3>
-                  <p className="text-sm text-slate-700 leading-relaxed">{currentCard.t}</p>
+
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left text-base font-medium leading-9 text-slate-800">
+              {currentOrder.templateParts.map((part, partIndex) => (
+                <React.Fragment key={partIndex}>
+                  <span>{part}</span>
+                  {partIndex < currentOrder.groups.length && (
+                    <span className="my-1 inline-flex min-h-10 min-w-[9rem] flex-wrap items-center gap-2 rounded-xl border-2 border-dashed border-amber-300 bg-white px-2 py-1 align-middle">
+                      {(selectedGroups[partIndex] || []).length > 0 ? (
+                        selectedGroups[partIndex].map((word, wordIndex) => (
+                          <button
+                            key={`${word}-${wordIndex}`}
+                            onClick={() => handleOrderWordClick(partIndex, word, false, wordIndex)}
+                            disabled={Boolean(orderResult)}
+                            className="rounded-lg bg-blue-100 px-2 py-1 text-sm font-bold text-blue-800 shadow-sm disabled:cursor-default"
+                          >
+                            {word}
+                          </button>
+                        ))
+                      ) : (
+                        <span className="px-2 text-xs font-bold text-amber-500">空欄</span>
+                      )}
+                    </span>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+
+            <div className="mt-5 space-y-3">
+              {currentOrder.groups.map((group, groupIndex) => (
+                <div key={groupIndex} className="rounded-2xl border border-slate-200 bg-white p-3">
+                  {currentOrder.groups.length > 1 && (
+                    <p className="mb-2 text-xs font-bold text-slate-400">選択肢 {groupIndex + 1}</p>
+                  )}
+                  <div className="flex flex-wrap justify-center gap-2">
+                    {(availableGroups[groupIndex] || []).length > 0 ? (
+                      (availableGroups[groupIndex] || []).map((word, wordIndex) => (
+                        <button
+                          key={`${word}-${wordIndex}`}
+                          onClick={() => handleOrderWordClick(groupIndex, word, true, wordIndex)}
+                          disabled={Boolean(orderResult)}
+                          className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm transition-colors hover:border-amber-400 hover:bg-amber-50 active:scale-95 disabled:cursor-default disabled:opacity-60"
+                        >
+                          {word}
+                        </button>
+                      ))
+                    ) : (
+                      <span className="text-sm font-medium text-slate-400">配置済み</span>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xs font-bold text-slate-400 uppercase mb-1 border-b pb-1">解説</h3>
-                  <p className="text-sm text-slate-700 leading-relaxed">{currentCard.e}</p>
+              ))}
+            </div>
+
+            <div className="mt-5 grid grid-cols-3 gap-2">
+              <button
+                onClick={checkOrderAnswer}
+                disabled={!isOrderComplete || Boolean(orderResult)}
+                className={`rounded-xl py-3 text-sm font-bold shadow-sm transition-colors ${
+                  isOrderComplete && !orderResult
+                    ? 'bg-amber-500 text-white hover:bg-amber-600'
+                    : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                }`}
+              >
+                判定
+              </button>
+              <button
+                onClick={() => setupOrderQuestion(currentCard)}
+                className="rounded-xl border border-slate-200 bg-white py-3 text-sm font-bold text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
+              >
+                やり直し
+              </button>
+              <button
+                onClick={showOrderAnswer}
+                className="rounded-xl bg-slate-800 py-3 text-sm font-bold text-white shadow-sm transition-colors hover:bg-slate-700"
+              >
+                答え
+              </button>
+            </div>
+
+            {orderResult && (
+              <div className={`mt-5 rounded-2xl border p-4 text-left ${
+                orderResult === "correct"
+                  ? 'border-emerald-200 bg-emerald-50'
+                  : orderResult === "incorrect"
+                    ? 'border-rose-200 bg-rose-50'
+                    : 'border-blue-200 bg-blue-50'
+              }`}>
+                <p className={`mb-3 text-sm font-bold ${
+                  orderResult === "correct"
+                    ? 'text-emerald-700'
+                    : orderResult === "incorrect"
+                      ? 'text-rose-700'
+                      : 'text-blue-700'
+                }`}>
+                  {orderResult === "correct" ? '正解' : orderResult === "incorrect" ? 'もう一度確認' : '答え表示'}
+                </p>
+                <p className="mb-3 rounded-xl bg-white p-3 text-base font-bold leading-relaxed text-slate-800">
+                  {currentCard.a}
+                </p>
+                <p className="text-sm font-medium leading-relaxed text-slate-700">{currentCard.e}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div 
+          className="w-full max-w-md bg-white rounded-2xl shadow-lg border border-slate-100 min-h-[320px] cursor-pointer relative transition-transform duration-300 transform hover:scale-[1.01]"
+          onClick={handleFlip}
+          onTouchStart={onTouchStartHandler}
+          onTouchMove={onTouchMoveHandler}
+          onTouchEnd={onTouchEndHandler}
+        >
+          <div className="absolute top-4 left-4 right-4 flex justify-center">
+             <span className="text-xs font-semibold text-indigo-500 bg-indigo-50 px-3 py-1 rounded-full text-center">
+               {currentCard.category}
+             </span>
+          </div>
+
+          <div className="p-6 pt-16 h-full flex flex-col justify-center items-center text-center">
+            {!isFlipped ? (
+              // 表面（問題）
+              <div className="w-full animate-in fade-in zoom-in-95 duration-200">
+                <span className="block text-sm font-bold text-slate-400 mb-4 tracking-widest">QUESTION</span>
+                {currentCard.q.split('\n').map((line, idx) => (
+                  <p key={idx} className={`text-lg font-medium text-slate-700 leading-relaxed ${idx === 0 ? 'mb-4' : ''}`}>
+                    {line}
+                  </p>
+                ))}
+                <p className="text-slate-400 text-sm mt-8 animate-pulse">タップして解答を見る</p>
+              </div>
+            ) : (
+              // 裏面（解答・解説）
+              <div className="w-full animate-in fade-in zoom-in-95 duration-200">
+                <span className="block text-sm font-bold text-emerald-500 mb-2 tracking-widest">ANSWER</span>
+                <p className="text-2xl font-bold text-slate-800 mb-6 bg-emerald-50 py-2 px-4 rounded-lg inline-block">
+                  {currentCard.a}
+                </p>
+                
+                <div className="text-left w-full space-y-4">
+                  <div>
+                    <h3 className="text-xs font-bold text-slate-400 uppercase mb-1 border-b pb-1">和訳</h3>
+                    <p className="text-sm text-slate-700 leading-relaxed">{currentCard.t}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-xs font-bold text-slate-400 uppercase mb-1 border-b pb-1">解説</h3>
+                    <p className="text-sm text-slate-700 leading-relaxed">{currentCard.e}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* ナビゲーションボタン */}
       <div className="w-full max-w-md mt-8 flex justify-between items-center gap-4">
