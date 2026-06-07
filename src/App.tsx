@@ -365,7 +365,7 @@ export default function App() {
       <div className="w-full max-w-md mb-4 flex flex-col items-center">
         <div className="flex items-center gap-2 mb-2">
           <BookOpen className="text-indigo-600 w-6 h-6" />
-          <h1 className="text-xl font-bold text-slate-800">技術英語 フラッシュカード</h1>
+          <h1 className="text-xl font-bold text-slate-800">工業英語 フラッシュカード</h1>
         </div>
       </div>
 
