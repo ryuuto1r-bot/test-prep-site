@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, RotateCcw, Shuffle, BookOpen, ListChecks } from 'lucide-react';
+import { ChevronLeft, ChevronRight, RotateCcw, Shuffle, BookOpen, ListChecks, Languages } from 'lucide-react';
+import sentenceData from './sentenceData';
 
 // フラッシュカードの全データ
 const flashcardsData = [
@@ -210,13 +211,18 @@ export default function App() {
   const [selectedGroups, setSelectedGroups] = useState([]);
   const [availableGroups, setAvailableGroups] = useState([]);
   const [orderResult, setOrderResult] = useState(null);
+  const [revealedSentences, setRevealedSentences] = useState([]);
   
   // スワイプ操作用の状態
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   const minSwipeDistance = 50;
 
-  const activeBaseCards = studyMode === "order" ? orderCards : flashcardsData;
+  const activeBaseCards = studyMode === "order"
+    ? orderCards
+    : studyMode === "sentences"
+      ? sentenceData
+      : flashcardsData;
   const categories = ["すべて", ...new Set(activeBaseCards.map(c => c.category))];
 
   // カードを切り替えたら表面に戻す
@@ -229,7 +235,11 @@ export default function App() {
   }, [currentIndex, cards, studyMode]);
 
   const getCardsFor = (category, mode = studyMode) => {
-    const base = mode === "order" ? orderCards : flashcardsData;
+    const base = mode === "order"
+      ? orderCards
+      : mode === "sentences"
+        ? sentenceData
+        : flashcardsData;
     return category === "すべて" ? [...base] : base.filter(c => c.category === category);
   };
 
@@ -248,6 +258,7 @@ export default function App() {
     setCards(nextCards);
     setCurrentIndex(0);
     setIsFlipped(false);
+    setRevealedSentences([]);
     if (mode === "order") setupOrderQuestion(nextCards[0]);
   };
 
@@ -257,6 +268,7 @@ export default function App() {
     const newCards = getCardsFor(category);
     setCards(newCards);
     setCurrentIndex(0);
+    setRevealedSentences([]);
   };
 
   const handleNext = () => {
@@ -281,6 +293,7 @@ export default function App() {
     const shuffled = shuffleArray(currentPool);
     setCards(shuffled);
     setCurrentIndex(0);
+    setRevealedSentences([]);
   };
 
   // ★修正: 選択中のカテゴリ内でリセットするように変更
@@ -288,6 +301,7 @@ export default function App() {
     const currentPool = getCardsFor(selectedCategory);
     setCards(currentPool);
     setCurrentIndex(0);
+    setRevealedSentences([]);
   };
 
   // スワイプ処理
@@ -348,11 +362,23 @@ export default function App() {
     setOrderResult("shown");
   };
 
+  const toggleSentence = (id) => {
+    setRevealedSentences(
+      revealedSentences.includes(id)
+        ? revealedSentences.filter(sentenceId => sentenceId !== id)
+        : [...revealedSentences, id]
+    );
+  };
+
+  const revealAllSentences = () => {
+    setRevealedSentences(cards.map(sentence => sentence.id));
+  };
+
   const currentCard = cards[currentIndex];
   // カードが存在しない場合（安全対策）
   if (!currentCard) return null;
 
-  const progress = ((currentIndex + 1) / cards.length) * 100;
+  const progress = studyMode === "sentences" ? 100 : ((currentIndex + 1) / cards.length) * 100;
   const currentOrder = studyMode === "order" ? parseOrderCard(currentCard) : null;
   const isOrderComplete = currentOrder
     ? currentOrder.groups.every((_, index) => (availableGroups[index] || []).length === 0)
@@ -369,7 +395,7 @@ export default function App() {
         </div>
       </div>
 
-      <div className="w-full max-w-md mb-4 grid grid-cols-2 gap-2 rounded-2xl bg-white p-1 shadow-sm border border-slate-200">
+      <div className="w-full max-w-md mb-4 grid grid-cols-3 gap-2 rounded-2xl bg-white p-1 shadow-sm border border-slate-200">
         <button
           onClick={() => handleModeChange("flashcard")}
           className={`flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold transition-colors ${
@@ -389,6 +415,16 @@ export default function App() {
           }`}
         >
           <ListChecks className="w-4 h-4" /> 並べ替え
+        </button>
+        <button
+          onClick={() => handleModeChange("sentences")}
+          className={`flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold transition-colors ${
+            studyMode === "sentences"
+              ? 'bg-emerald-600 text-white shadow-sm'
+              : 'text-slate-600 hover:bg-slate-50'
+          }`}
+        >
+          <Languages className="w-4 h-4" /> 対訳
         </button>
       </div>
 
@@ -434,12 +470,83 @@ export default function App() {
           ></div>
         </div>
         <div className="w-full flex justify-between text-xs text-slate-500 font-medium">
-          <span>Q. {currentIndex + 1}</span>
-          <span>{cards.length} 問中</span>
+          <span>{studyMode === "sentences" ? '表示中' : `Q. ${currentIndex + 1}`}</span>
+          <span>{cards.length} {studyMode === "sentences" ? '文' : '問中'}</span>
         </div>
       </div>
 
-      {studyMode === "order" && currentOrder ? (
+      {studyMode === "sentences" ? (
+        <div className="w-full max-w-2xl">
+          <div className="mb-4 rounded-2xl border border-emerald-100 bg-white p-4 shadow-sm">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <div>
+                <span className="text-xs font-bold tracking-widest text-emerald-600">TRANSLATION</span>
+                <h2 className="mt-1 text-lg font-bold text-slate-800">和訳から英文を確認</h2>
+              </div>
+              <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
+                {revealedSentences.length}/{cards.length}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={revealAllSentences}
+                disabled={revealedSentences.length === cards.length}
+                className={`rounded-xl py-3 text-sm font-bold shadow-sm transition-colors ${
+                  revealedSentences.length === cards.length
+                    ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                    : 'bg-emerald-600 text-white hover:bg-emerald-700'
+                }`}
+              >
+                全て表示
+              </button>
+              <button
+                onClick={() => setRevealedSentences([])}
+                disabled={revealedSentences.length === 0}
+                className={`rounded-xl py-3 text-sm font-bold shadow-sm transition-colors ${
+                  revealedSentences.length === 0
+                    ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                    : 'bg-slate-800 text-white hover:bg-slate-700'
+                }`}
+              >
+                隠す
+              </button>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            {cards.map(sentence => {
+              const isRevealed = revealedSentences.includes(sentence.id);
+
+              return (
+                <button
+                  key={sentence.id}
+                  onClick={() => toggleSentence(sentence.id)}
+                  className={`w-full rounded-2xl border p-4 text-left shadow-sm transition-colors ${
+                    isRevealed
+                      ? 'border-emerald-200 bg-emerald-50'
+                      : 'border-slate-200 bg-white hover:border-emerald-200 hover:bg-emerald-50/50'
+                  }`}
+                >
+                  <div className="mb-2 flex items-center justify-between gap-3">
+                    <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-emerald-700 shadow-sm">
+                      {sentence.no}
+                    </span>
+                    <span className="text-xs font-bold text-slate-400">
+                      {isRevealed ? '英文表示中' : 'タップで英文'}
+                    </span>
+                  </div>
+                  <p className="text-base font-bold leading-relaxed text-slate-800">{sentence.jp}</p>
+                  {isRevealed && (
+                    <p className="mt-4 rounded-xl bg-white p-3 text-base font-semibold leading-relaxed text-emerald-800 shadow-inner">
+                      {sentence.en}
+                    </p>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ) : studyMode === "order" && currentOrder ? (
         <div className="w-full max-w-md bg-white rounded-2xl shadow-lg border border-slate-100 min-h-[430px] relative">
           <div className="absolute top-4 left-4 right-4 flex justify-center">
             <span className="text-xs font-semibold text-amber-600 bg-amber-50 px-3 py-1 rounded-full text-center">
@@ -608,27 +715,31 @@ export default function App() {
         </div>
       )}
 
-      {/* ナビゲーションボタン */}
-      <div className="w-full max-w-md mt-8 flex justify-between items-center gap-4">
-        <button 
-          onClick={handlePrev}
-          disabled={currentIndex === 0}
-          className="flex items-center gap-2 px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 font-medium hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm transition-colors w-full justify-center"
-        >
-          <ChevronLeft className="w-5 h-5" /> 前へ
-        </button>
-        <button 
-          onClick={handleNext}
-          disabled={currentIndex === cards.length - 1}
-          className="flex items-center gap-2 px-4 py-3 bg-indigo-600 border border-indigo-600 rounded-xl text-white font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm transition-colors w-full justify-center"
-        >
-          次へ <ChevronRight className="w-5 h-5" />
-        </button>
-      </div>
+      {studyMode !== "sentences" && (
+        <>
+          {/* ナビゲーションボタン */}
+          <div className="w-full max-w-md mt-8 flex justify-between items-center gap-4">
+            <button 
+              onClick={handlePrev}
+              disabled={currentIndex === 0}
+              className="flex items-center gap-2 px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 font-medium hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm transition-colors w-full justify-center"
+            >
+              <ChevronLeft className="w-5 h-5" /> 前へ
+            </button>
+            <button 
+              onClick={handleNext}
+              disabled={currentIndex === cards.length - 1}
+              className="flex items-center gap-2 px-4 py-3 bg-indigo-600 border border-indigo-600 rounded-xl text-white font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm transition-colors w-full justify-center"
+            >
+              次へ <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
 
-      <p className="mt-8 text-xs text-slate-400 text-center">
-        ※パソコンはクリック、スマホはタップでカードが裏返ります。<br/>スマホの場合は左右にスワイプして移動も可能です。
-      </p>
+          <p className="mt-8 text-xs text-slate-400 text-center">
+            ※パソコンはクリック、スマホはタップでカードが裏返ります。<br/>スマホの場合は左右にスワイプして移動も可能です。
+          </p>
+        </>
+      )}
 
     </div>
   );
