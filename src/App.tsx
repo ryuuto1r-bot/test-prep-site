@@ -212,6 +212,7 @@ export default function App() {
   const [availableGroups, setAvailableGroups] = useState([]);
   const [orderResult, setOrderResult] = useState(null);
   const [revealedSentences, setRevealedSentences] = useState([]);
+  const [sentenceDirection, setSentenceDirection] = useState("enToJp");
   
   // スワイプ操作用の状態
   const [touchStart, setTouchStart] = useState(null);
@@ -383,6 +384,7 @@ export default function App() {
   const isOrderComplete = currentOrder
     ? currentOrder.groups.every((_, index) => (availableGroups[index] || []).length === 0)
     : false;
+  const isEnglishToJapanese = sentenceDirection === "enToJp";
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center py-8 px-4 font-sans text-slate-800">
@@ -481,11 +483,41 @@ export default function App() {
             <div className="mb-3 flex items-center justify-between gap-3">
               <div>
                 <span className="text-xs font-bold tracking-widest text-emerald-600">TRANSLATION</span>
-                <h2 className="mt-1 text-lg font-bold text-slate-800">和訳から英文を確認</h2>
+                <h2 className="mt-1 text-lg font-bold text-slate-800">
+                  {isEnglishToJapanese ? '英文から和訳を確認' : '和訳から英文を確認'}
+                </h2>
               </div>
               <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
                 {revealedSentences.length}/{cards.length}
               </span>
+            </div>
+            <div className="mb-3 grid grid-cols-2 gap-2 rounded-xl bg-slate-100 p-1">
+              <button
+                onClick={() => {
+                  setSentenceDirection("enToJp");
+                  setRevealedSentences([]);
+                }}
+                className={`rounded-lg py-2 text-sm font-bold transition-colors ${
+                  isEnglishToJapanese
+                    ? 'bg-emerald-600 text-white shadow-sm'
+                    : 'text-slate-600 hover:bg-white'
+                }`}
+              >
+                英語 → 日本語
+              </button>
+              <button
+                onClick={() => {
+                  setSentenceDirection("jpToEn");
+                  setRevealedSentences([]);
+                }}
+                className={`rounded-lg py-2 text-sm font-bold transition-colors ${
+                  !isEnglishToJapanese
+                    ? 'bg-emerald-600 text-white shadow-sm'
+                    : 'text-slate-600 hover:bg-white'
+                }`}
+              >
+                日本語 → 英語
+              </button>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <button
@@ -516,6 +548,8 @@ export default function App() {
           <div className="space-y-3">
             {cards.map(sentence => {
               const isRevealed = revealedSentences.includes(sentence.id);
+              const promptText = isEnglishToJapanese ? sentence.en : sentence.jp;
+              const answerText = isEnglishToJapanese ? sentence.jp : sentence.en;
 
               return (
                 <button
@@ -532,13 +566,15 @@ export default function App() {
                       {sentence.no}
                     </span>
                     <span className="text-xs font-bold text-slate-400">
-                      {isRevealed ? '英文表示中' : 'タップで英文'}
+                      {isRevealed
+                        ? (isEnglishToJapanese ? '和訳表示中' : '英文表示中')
+                        : (isEnglishToJapanese ? 'タップで和訳' : 'タップで英文')}
                     </span>
                   </div>
-                  <p className="text-base font-bold leading-relaxed text-slate-800">{sentence.jp}</p>
+                  <p className="text-base font-bold leading-relaxed text-slate-800">{promptText}</p>
                   {isRevealed && (
                     <p className="mt-4 rounded-xl bg-white p-3 text-base font-semibold leading-relaxed text-emerald-800 shadow-inner">
-                      {sentence.en}
+                      {answerText}
                     </p>
                   )}
                 </button>
