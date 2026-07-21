@@ -192,7 +192,7 @@ const sentenceData = [
     ],
   ]),
 
-  ...makeSentenceGroup("第3章 Part 3: Oxidizing and Reducing Agents (酸化剤と還元剤)", [
+  ...makeSentenceGroup("第3章 Part 3: Oxidizing Agents and Reducing Agents (酸化剤と還元剤)", [
     [
       "Oxidation and reduction as loss and gain of electrons between the substances can explain reactions in which oxygen is not involved.",
       "物質間での電子の喪失と獲得としての酸化と還元は、酸素が関与しない反応を説明することができます。",
