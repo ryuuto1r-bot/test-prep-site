@@ -9,12 +9,14 @@ type Card = {
 
 type WordEntry = [word: string, meaning: string, note?: string];
 
-const lesson6 = "Lesson 6: Earthquake Information";
-const lesson6Part4 = "Lesson 6 Part 4: The Ring of Fire";
-const lesson9Part1 = "Lesson 9 Part 1: Combination and Decomposition";
-const lesson9Part2 = "Lesson 9 Part 2: Oxidation and Reduction";
-const lesson9Part3 = "Lesson 9 Part 3: Oxidizing and Reducing Agents";
-const workbook9Part1 = "Workbook: Lesson 9 Part 1";
+const lesson6 = "第2章 Part 3: Earthquake Information";
+const lesson6Part4 = "第2章 Part 4: The Ring of Fire";
+const lesson9Part1 = "第3章 Part 1: Combination and Decomposition";
+const lesson9Part2 = "第3章 Part 2: Oxidation and Reduction";
+const lesson9Part3 = "第3章 Part 3: Oxidizing and Reducing Agents";
+const workbook9Part1 = "ワークブック (Lesson 9 Part 1)";
+const lesson6Words = "単語・アクセント (第2章)";
+const lesson9Words = "単語・アクセント (第3章)";
 
 let nextId = 1;
 
@@ -36,8 +38,8 @@ const makeCard = (
   e: string,
 ): Card => ({ id: nextId++, category, q, a, t, e });
 
-const flashcardsData: Card[] = [
-  ...makeWordCards(lesson6, [
+const unsortedFlashcardsData: Card[] = [
+  ...makeWordCards(lesson6Words, [
     ["lag", "遅れ、タイムラグ"],
     ["arrival", "到着"],
     ["seismometer", "地震計"],
@@ -119,7 +121,7 @@ const flashcardsData: Card[] = [
     "現在完了の受動態 has been discussed を使います。",
   ),
 
-  ...makeWordCards(lesson6Part4, [
+  ...makeWordCards(lesson6Words, [
     ["layer", "層"],
     ["structure", "構造"],
     ["mantle", "マントル"],
@@ -196,7 +198,7 @@ const flashcardsData: Card[] = [
     "2つの語群を順番に完成させます。解答は原稿の模範解答に準拠しています。",
   ),
 
-  ...makeWordCards(lesson9Part1, [
+  ...makeWordCards(lesson9Words, [
     ["combination", "結合、化合"],
     ["decomposition", "分解"],
     ["reactant", "反応物"],
@@ -291,7 +293,7 @@ const flashcardsData: Card[] = [
     "result in ～ で「～につながる」。causing serious accidents が trouble を説明します。",
   ),
 
-  ...makeWordCards(lesson9Part2, [
+  ...makeWordCards(lesson9Words, [
     ["oxidation", "酸化"],
     ["reduction", "還元"],
     ["removal", "除去、取り除くこと"],
@@ -388,7 +390,7 @@ const flashcardsData: Card[] = [
     "with its population increasing ... で付帯状況を表します。",
   ),
 
-  ...makeWordCards(lesson9Part3, [
+  ...makeWordCards(lesson9Words, [
     ["zinc", "亜鉛"],
     ["displace", "～を置き換える、置換する"],
     ["donate", "～を与える、供与する"],
@@ -446,12 +448,12 @@ const flashcardsData: Card[] = [
     "compounds like A and B を主語にして、are released into the air と続けます。",
   ),
 
-  makeCard(workbook9Part1, "【アクセント】\nreactant", "re-AC-tant", "reactant：反応物", "大文字部分 AC を最も強く読みます。"),
-  makeCard(workbook9Part1, "【アクセント】\nproduct", "PROD-uct", "product：生成物", "大文字部分 PROD を最も強く読みます。"),
-  makeCard(workbook9Part1, "【アクセント】\ncombination", "com-bi-NA-tion", "combination：結合、化合", "大文字部分 NA を最も強く読みます。"),
-  makeCard(workbook9Part1, "【アクセント】\ndecomposition", "de-com-po-SI-tion", "decomposition：分解", "大文字部分 SI を最も強く読みます。"),
-  makeCard(workbook9Part1, "【アクセント】\nsynthesize", "SYN-the-size", "synthesize：～を合成する", "大文字部分 SYN を最も強く読みます。"),
-  makeCard(workbook9Part1, "【アクセント】\nderive", "de-RIVE", "derive：～を引き出す、由来する", "大文字部分 RIVE を最も強く読みます。"),
+  makeCard(lesson9Words, "【アクセント】\nreactant", "re-AC-tant", "reactant：反応物", "大文字部分 AC を最も強く読みます。"),
+  makeCard(lesson9Words, "【アクセント】\nproduct", "PROD-uct", "product：生成物", "大文字部分 PROD を最も強く読みます。"),
+  makeCard(lesson9Words, "【アクセント】\ncombination", "com-bi-NA-tion", "combination：結合、化合", "大文字部分 NA を最も強く読みます。"),
+  makeCard(lesson9Words, "【アクセント】\ndecomposition", "de-com-po-SI-tion", "decomposition：分解", "大文字部分 SI を最も強く読みます。"),
+  makeCard(lesson9Words, "【アクセント】\nsynthesize", "SYN-the-size", "synthesize：～を合成する", "大文字部分 SYN を最も強く読みます。"),
+  makeCard(lesson9Words, "【アクセント】\nderive", "de-RIVE", "derive：～を引き出す、由来する", "大文字部分 RIVE を最も強く読みます。"),
   makeCard(workbook9Part1, "【単語選択】\nIn a ( ) reaction, substances combine to form a compound.", "combination", "結合反応では、物質が結合して化合物を作る。", "combination reaction は「結合反応」。"),
   makeCard(workbook9Part1, "【単語選択】\nIn a ( ) reaction, a compound separates into the simpler substances.", "decomposition", "分解反応では、化合物がより単純な物質に分かれる。", "decomposition reaction は「分解反応」。"),
   makeCard(workbook9Part1, "【単語選択】\nA ( ) is a substance that participates in a chemical reaction.", "reactant", "反応物とは、化学反応に参加する物質である。", "reactant は「反応物」。"),
@@ -482,5 +484,23 @@ const flashcardsData: Card[] = [
   makeCard(workbook9Part1, "【Expressions】\n反応の結果作られる物質は生成物と呼ばれる。\nThe substances that are formed ( ) ( ) ( ) ( ) the reaction are called the products.", "as a result of", "反応の結果作られる物質は生成物と呼ばれる。", "as a result of ～ で「～の結果として」。"),
   makeCard(workbook9Part1, "【Expressions】\n様々な原料に由来する化学物質から合成される物質は多数ある。\nMany materials are synthesized from chemicals ( ) ( ) various sources.", "derived from", "様々な原料に由来する化学物質から合成される物質は多数ある。", "derived from ～ が chemicals を後ろから修飾します。"),
 ];
+
+const categoryOrder = [
+  lesson6,
+  lesson6Part4,
+  lesson9Part1,
+  lesson9Part2,
+  lesson9Part3,
+  workbook9Part1,
+  lesson6Words,
+  lesson9Words,
+];
+const categoryPosition = new Map(categoryOrder.map((category, index) => [category, index]));
+
+const flashcardsData = [...unsortedFlashcardsData].sort(
+  (left, right) =>
+    (categoryPosition.get(left.category) ?? Number.MAX_SAFE_INTEGER) -
+    (categoryPosition.get(right.category) ?? Number.MAX_SAFE_INTEGER),
+);
 
 export default flashcardsData;

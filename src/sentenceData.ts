@@ -13,7 +13,7 @@ const makeSentenceGroup = (category: string, pairs: SentencePair[]) =>
   }));
 
 const sentenceData = [
-  ...makeSentenceGroup("Lesson 6: Earthquake Information（地震情報）", [
+  ...makeSentenceGroup("第2章 Part 3: Earthquake Information (地震情報)", [
     [
       "When an earthquake occurs, the distance from the epicenter can be determined by the time lag between the arrival of the P- and S-waves.",
       "地震が発生すると、震央からの距離は、P波とS波の到着のタイムラグ（時間差）によって決定することができます。",
@@ -56,7 +56,7 @@ const sentenceData = [
     ],
   ]),
 
-  ...makeSentenceGroup("Lesson 6 Part 4: The Ring of Fire（環太平洋火山帯）", [
+  ...makeSentenceGroup("第2章 Part 4: The Ring of Fire (環太平洋火山帯)", [
     [
       "The earth has a layered structure, including the core, mantle and crust.",
       "地球は、コア（核）、マントル、地殻を含む多層構造を持っています。",
@@ -99,7 +99,7 @@ const sentenceData = [
     ],
   ]),
 
-  ...makeSentenceGroup("Lesson 9 Part 1: Combination and Decomposition（結合と分解）", [
+  ...makeSentenceGroup("第3章 Part 1: Combination and Decomposition (結合と分解)", [
     [
       "A chemical reaction is a process in which one or more substances are converted to one or more different substances.",
       "化学反応とは、一つまたは複数の物質が、異なる物質に変換されるプロセスのことです。",
@@ -146,7 +146,7 @@ const sentenceData = [
     ],
   ]),
 
-  ...makeSentenceGroup("Lesson 9 Part 2: Oxidation and Reduction（酸化と還元）", [
+  ...makeSentenceGroup("第3章 Part 2: Oxidation and Reduction (酸化と還元)", [
     [
       "Oxidation is the reaction of a substance with oxygen or the addition of oxygen to a substance in a reaction.",
       "酸化とは、物質が酸素と反応すること、あるいは反応において物質に酸素が付加されることです。",
@@ -192,7 +192,7 @@ const sentenceData = [
     ],
   ]),
 
-  ...makeSentenceGroup("Lesson 9 Part 3: Oxidizing and Reducing Agents（酸化剤と還元剤）", [
+  ...makeSentenceGroup("第3章 Part 3: Oxidizing and Reducing Agents (酸化剤と還元剤)", [
     [
       "Oxidation and reduction as loss and gain of electrons between the substances can explain reactions in which oxygen is not involved.",
       "物質間での電子の喪失と獲得としての酸化と還元は、酸素が関与しない反応を説明することができます。",
