@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, RotateCcw, Shuffle, BookOpen, ListChecks, Languages } from 'lucide-react';
 import sentenceData from './sentenceData';
+import updatedFlashcardsData from './flashcardsData';
 
 // フラッシュカードの全データ
-const flashcardsData = [
+const legacyFlashcardsData = [
   // --- 第1章 Part 1 ---
   { id: 1, category: "第1章 Part 1: Types of Waves", q: "私たちはその物理学者がノーベル賞を受賞したことを誇りに思う。\nWe are proud of the physicist's (　　) (　　) the Nobel Prize.", a: "having, won", t: "私たちはその物理学者がノーベル賞を受賞したことを誇りに思う。", e: "前置詞 of の目的語として動名詞。誇る時点より受賞が過去なので完了形動名詞(having + 過去分詞)にする。" },
   { id: 2, category: "第1章 Part 1: Types of Waves", q: "その理論はまだ検証中です。\nThe theory (　　) still (　　) (　　).", a: "is, being, examined", t: "その理論はまだ検証中です。", e: "「検証されているところだ」という進行形の受動態(be動詞 + being + 過去分詞)。" },
@@ -151,6 +152,8 @@ const flashcardsData = [
   { id: 133, category: "単語・アクセント (第2章)", q: "【アクセント・和訳】\nshallow", a: "SHAL-low", t: "浅い", e: "第1音節(shal-)にアクセントがきます。" }
 ];
 
+const flashcardsData = updatedFlashcardsData;
+
 const orderCards = flashcardsData.filter(card => card.q.includes('[並べ替え]'));
 
 const shuffleArray = (items) => [...items].sort(() => Math.random() - 0.5);
@@ -165,12 +168,17 @@ const normalizeText = (text) =>
 
 const orderChoicesByAnswer = (choices, answerText) => {
   const normalizedAnswer = normalizeText(answerText);
+  const getPhraseIndex = (phrase) => {
+    const phrasePattern = normalizeText(phrase)
+      .split(' ')
+      .map(part => part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+      .join('\\s+');
+    const match = normalizedAnswer.match(new RegExp(`(?:^|\\s)${phrasePattern}(?=\\s|$)`));
+    return match?.index ?? Number.MAX_SAFE_INTEGER;
+  };
+
   return [...choices].sort((a, b) => {
-    const aIndex = normalizedAnswer.indexOf(normalizeText(a));
-    const bIndex = normalizedAnswer.indexOf(normalizeText(b));
-    const safeA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
-    const safeB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
-    return safeA - safeB;
+    return getPhraseIndex(a) - getPhraseIndex(b);
   });
 };
 
@@ -393,7 +401,7 @@ export default function App() {
       <div className="w-full max-w-md mb-4 flex flex-col items-center">
         <div className="flex items-center gap-2 mb-2">
           <BookOpen className="text-indigo-600 w-6 h-6" />
-          <h1 className="text-xl font-bold text-slate-800">工業英語 フラッシュカード</h1>
+          <h1 className="text-xl font-bold text-slate-800">工業英語 前期末テスト対策</h1>
         </div>
       </div>
 

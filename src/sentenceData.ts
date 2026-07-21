@@ -1,79 +1,243 @@
+type SentencePair = [english: string, japanese: string];
+
+const circledNumbers = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩", "⑪", "⑫", "⑬"];
+let nextSentenceId = 1;
+
+const makeSentenceGroup = (category: string, pairs: SentencePair[]) =>
+  pairs.map(([en, jp], index) => ({
+    id: nextSentenceId++,
+    category,
+    no: circledNumbers[index] || String(index + 1),
+    en,
+    jp,
+  }));
+
 const sentenceData = [
-  {"id":1,"category":"第1章 Part 1: Types of Waves (波の種類)","no":"①","jp":"ロープの片端を持って一定のペースで上下に揺らすと、ロープの動きは波のように見えます。","en":"When you hold one end of a rope and swing it up and down at a constant pace, the movement of the rope looks like waves."},
-  {"id":2,"category":"第1章 Part 1: Types of Waves (波の種類)","no":"②","jp":"ロープ上の各点はただ上下に動いているだけですが、ロープ全体はあたかも一端からもう一端へ前進しているかのように見えます。","en":"Although each point on the rope is just moving up and down, the whole rope looks as if it were moving forward from one end to the other."},
-  {"id":3,"category":"第1章 Part 1: Types of Waves (波の種類)","no":"③","jp":"ロープを通して実際に伝達されているのは、あなたがロープを上下に揺らすことによってロープに与えられるエネルギーです。","en":"What is actually being transferred through the rope is energy that is given to the rope by your swinging it up and down."},
-  {"id":4,"category":"第1章 Part 1: Types of Waves (波の種類)","no":"④","jp":"エネルギーの伝達方向に対して垂直に振動するこの種の波は、横波と呼ばれます。","en":"This kind of wave, which oscillates perpendicular to the direction of energy transfer, is called a transverse wave."},
-  {"id":5,"category":"第1章 Part 1: Types of Waves (波の種類)","no":"⑤","jp":"ばねの一端を前後に動かすと、ばねの一部が圧縮され、その圧縮された部分があたかもばねに沿って移動しているかのように見えます。","en":"When you move one end of a spring back and forth, a part of the spring is compressed, and the compressed part looks as if it were traveling along the spring."},
-  {"id":6,"category":"第1章 Part 1: Types of Waves (波の種類)","no":"⑥","jp":"しかし、ばね上の各点自体はただ並んで動いているだけです。","en":"However, each point on the spring itself is just moving side by side."},
-  {"id":7,"category":"第1章 Part 1: Types of Waves (波の種類)","no":"⑦","jp":"このタイプの波は縦波と呼ばれ、その変位の方向は伝播の方向と同じです。","en":"This type of wave is called a longitudinal wave, whose direction of displacement is the same as the direction of propagation."},
-  {"id":8,"category":"第1章 Part 1: Types of Waves (波の種類)","no":"⑧","jp":"横波と縦波の両方について言えることですが、エネルギーが伝達される物質は媒体(媒質)と呼ばれます。","en":"As for both transverse and longitudinal waves, the substance through which energy is transferred is called the medium."},
-  {"id":9,"category":"第1章 Part 2: Properties of Waves (波の性質)","no":"①","jp":"ひもの一端を一度だけ上下に揺らすと、パルス波がひもに沿って伝わります。","en":"When you swing one end of a string up and down just once, a pulse wave will propagate along the string."},
-  {"id":10,"category":"第1章 Part 2: Properties of Waves (波の性質)","no":"②","jp":"ひもを定期的に上下に揺らし続けると、周期波が形成されます。","en":"If you continue swinging the string up and down periodically, a periodic wave will be formed."},
-  {"id":11,"category":"第1章 Part 2: Properties of Waves (波の性質)","no":"③","jp":"波が到達する最も高い点と最も低い点は、それぞれ波の山と谷と呼ばれます。","en":"The highest and the lowest points where the wave reaches are respectively called the crest and the trough of the wave."},
-  {"id":12,"category":"第1章 Part 2: Properties of Waves (波の性質)","no":"④","jp":"水平面から山または谷までの垂直距離は、波の振幅と呼ばれます。","en":"The vertical distance from the level point to the crest or the trough is called the amplitude of the wave."},
-  {"id":13,"category":"第1章 Part 2: Properties of Waves (波の性質)","no":"⑤","jp":"ある山から次の山までの距離は、2つの谷の間の距離と同じであり、波長と呼ばれます。","en":"The distance from one crest to the next, which is the same as the distance between two troughs, is called the wavelength."},
-  {"id":14,"category":"第1章 Part 2: Properties of Waves (波の性質)","no":"⑥","jp":"波長は一般にギリシャ文字のλ(ラムダ)で表されます。","en":"The wavelength is generally denoted by the Greek letter λ (lambda)."},
-  {"id":15,"category":"第1章 Part 2: Properties of Waves (波の性質)","no":"⑦","jp":"波の周期は、波が1回の上下サイクルを作るのに何秒かかるかとして定義されます。","en":"The period of the wave is defined as how many seconds it takes for the wave to make one up-and-down cycle."},
-  {"id":16,"category":"第1章 Part 2: Properties of Waves (波の性質)","no":"⑧","jp":"言い換えれば、周期の逆数は、波が1秒間に何サイクル作るかを表します。","en":"In other words, the inverse of the period represents how many cycles the wave makes in one second."},
-  {"id":17,"category":"第1章 Part 2: Properties of Waves (波の性質)","no":"⑨","jp":"これは波の周波数と呼ばれ、ヘルツ(Hz)で測定されます。","en":"This is called the frequency of the wave, which is measured in hertz (Hz)."},
-  {"id":18,"category":"第1章 Part 3: Doppler Effect (ドップラー効果)","no":"①","jp":"波長と周波数がそれぞれλ(m)とf(Hz)である波を観測していると仮定してください。","en":"Suppose you are observing a wave whose wavelength and frequency are λ (m) and f (Hz) respectively."},
-  {"id":19,"category":"第1章 Part 3: Doppler Effect (ドップラー効果)","no":"②","jp":"これは波が毎秒λ×fメートル進むことを意味し、それはまた、波の速度v(m/s)が波長と周波数を掛けることによって計算できることを意味します。","en":"This means the wave travels λ × f meters per second, which also means the velocity of the wave v (m/s) can be calculated by multiplying its wavelength and frequency."},
-  {"id":20,"category":"第1章 Part 3: Doppler Effect (ドップラー効果)","no":"③","jp":"これらの関係は公式で表され、変形することが可能です。","en":"These relationships are expressed by the formula v = λ × f, which can be modified as λ = v / f and f = v / λ."},
-  {"id":21,"category":"第1章 Part 3: Doppler Effect (ドップラー効果)","no":"④","jp":"空気中の音速は一般的に340m/sと概算されます。","en":"The speed of sound in the air is generally approximated as 340 m/s."},
-  {"id":22,"category":"第1章 Part 3: Doppler Effect (ドップラー効果)","no":"⑤","jp":"もし周波数が440Hzの音が聞こえたら、数値を上記の公式に代入することで、その波長が約0.77メートルであると判断できます。","en":"If you hear a sound whose frequency is 440 Hz, you can determine that its wavelength is approximately 0.77 meters by plugging the numbers into the formula above."},
-  {"id":23,"category":"第1章 Part 3: Doppler Effect (ドップラー効果)","no":"⑥","jp":"音源が10m/sであなたに向かって近づいている場合について考えてみましょう。","en":"Let's think about a case in which the source of sound is approaching toward you at 10 m/s."},
-  {"id":24,"category":"第1章 Part 3: Doppler Effect (ドップラー効果)","no":"⑦","jp":"音は340m/sで進みますが、この場合、音源が毎秒あなたに向かって10メートル移動しているため、音は毎秒330メートルしか進みません。","en":"Although the sound travels at 340 m/s, in this case the sound travels only 330 meters per second because the sound source is moving 10 meters toward you every second."},
-  {"id":25,"category":"第1章 Part 3: Doppler Effect (ドップラー効果)","no":"⑧","jp":"したがって、見かけの波長は、音源が静止している場合よりも短くなります。","en":"So, the apparent wavelength will be shorter than in the case where the sound source is stationary."},
-  {"id":26,"category":"第1章 Part 3: Doppler Effect (ドップラー効果)","no":"⑨","jp":"これは、音の高さが実際よりも高くなることを意味します。","en":"This means the pitch of the sound will be higher than it really is."},
-  {"id":27,"category":"第1章 Part 3: Doppler Effect (ドップラー効果)","no":"⑩","jp":"同じ理由で、音源があなたから遠ざかっているときは、より低い音に聞こえます。","en":"For the same reason, when the sound source is retreating from you, it sounds lower-pitched."},
-  {"id":28,"category":"第1章 Part 3: Doppler Effect (ドップラー効果)","no":"⑪","jp":"この現象はドップラー効果と呼ばれます。","en":"This phenomenon is called the Doppler effect."},
-  {"id":29,"category":"第1章 Part 4: Light Waves (光波)","no":"①","jp":"波は一般的に伝播するための媒体を必要としますが、電磁波だけは真空中を伝わることができます。","en":"Although waves generally need a medium to propagate through, only electromagnetic waves can travel through a vacuum."},
-  {"id":30,"category":"第1章 Part 4: Light Waves (光波)","no":"②","jp":"電磁波には、光、X線、ガンマ線などの電波(放射線)が含まれます。","en":"Electromagnetic waves contain radio waves, such as light, x-rays, gamma rays and so on."},
-  {"id":31,"category":"第1章 Part 4: Light Waves (光波)","no":"③","jp":"波長が390から700ナノメートルの間の電磁波は、人間の目が反応できるため、可視光、または単に光と呼ばれます。","en":"Electromagnetic waves whose wavelengths are between 390 to 700 nanometers are called visible light, or simply light, because human eyes can respond to them."},
-  {"id":32,"category":"第1章 Part 4: Light Waves (光波)","no":"④","jp":"光を含む電磁波の速度は、毎秒約3.0×108(3億)メートルです。","en":"The speed of electromagnetic waves, including light, is approximately 3.0 × 10 8 (300 million) meters per second."},
-  {"id":33,"category":"第1章 Part 4: Light Waves (光波)","no":"⑤","jp":"光は1秒間に地球を7周半するほど速く進みます。","en":"Light travels fast enough to go around the earth seven and a half times in one second."},
-  {"id":34,"category":"第1章 Part 4: Light Waves (光波)","no":"⑥","jp":"光が水などの媒体の中を進むとき、真空に対して一定の割合で速度が落ちます。","en":"When light travels through a medium such as water, it slows down at a certain rate with respect to the vacuum."},
-  {"id":35,"category":"第1章 Part 4: Light Waves (光波)","no":"⑦","jp":"その割合は屈折率と呼ばれ、媒体によって異なります。","en":"The rate, which is called the refractive index, depends on the medium."},
-  {"id":36,"category":"第1章 Part 4: Light Waves (光波)","no":"⑧","jp":"水の屈折率は1.333であるため、光は真空中よりも1.333倍遅く進みます。","en":"As the refractive index of water is 1.333, light travels 1.333 times slower than through a vacuum."},
-  {"id":37,"category":"第1章 Part 4: Light Waves (光波)","no":"⑨","jp":"屈折率は波長によっても異なります。","en":"The refractive index also depends on the wavelength."},
-  {"id":38,"category":"第1章 Part 4: Light Waves (光波)","no":"⑩","jp":"すべての色の光の混合物である白色光がプリズムを通るとき、それぞれの色が波長に応じて別々に屈折します。","en":"When a white light, which is a mixture of all colors of light, goes through a prism, each color refracts separately according to its wavelength."},
-  {"id":39,"category":"第1章 Part 4: Light Waves (光波)","no":"⑪","jp":"これにより、虹のように見えるスペクトルが作られます。","en":"This creates a spectrum, which looks like a rainbow."},
-  {"id":40,"category":"第2章 Part 1: Measurement of Earthquakes (地震の測定)","no":"①","jp":"日本は歴史を通じて頻繁に地震を経験してきました。","en":"Japan has experienced frequent earthquakes throughout its history."},
-  {"id":41,"category":"第2章 Part 1: Measurement of Earthquakes (地震の測定)","no":"②","jp":"地震が発生した直後に、地震情報が一般に提供されます。","en":"Just after an earthquake occurs, earthquake information is provided to the public."},
-  {"id":42,"category":"第2章 Part 1: Measurement of Earthquakes (地震の測定)","no":"③","jp":"この情報には、震央(震源地)の位置、震源の深さ、地震の規模(マグニチュード)、および観測された震度の分布が含まれます。","en":"The information includes the epicenter location, the depth of the focus, the seismic scale, and the distribution of observed seismic intensity."},
-  {"id":43,"category":"第2章 Part 1: Measurement of Earthquakes (地震の測定)","no":"④","jp":"津波が予測される場合は、津波警報も発令されます。","en":"If a tsunami is predicted, a tsunami warning is issued as well."},
-  {"id":44,"category":"第2章 Part 1: Measurement of Earthquakes (地震の測定)","no":"⑤","jp":"震度階級は国によって異なります。","en":"Seismic intensity scales vary from country to country."},
-  {"id":45,"category":"第2章 Part 1: Measurement of Earthquakes (地震の測定)","no":"⑥","jp":"日本では、「震度(shindo)」という単位で表現されます。","en":"In Japan, it is described in the unit of shindo."},
-  {"id":46,"category":"第2章 Part 1: Measurement of Earthquakes (地震の測定)","no":"⑦","jp":"それは0から7まであり、7が最も強いです。","en":"It runs from 0 to 7 with 7 being the strongest."},
-  {"id":47,"category":"第2章 Part 1: Measurement of Earthquakes (地震の測定)","no":"⑧","jp":"震度の尺度は、地下の状況、震央からの距離、地震の規模など、さまざまな要因によって場所ごとに異なります。","en":"The shindo measure varies from place to place, depending on various factors, such as underground conditions, distance from the epicenter, and seismic scale."},
-  {"id":48,"category":"第2章 Part 1: Measurement of Earthquakes (地震の測定)","no":"⑨","jp":"地震の規模(スケール)は地震の大きさを表し、通常はマグニチュードの数値で示されます。","en":"The seismic scale describes the size of the earthquake, which is usually denoted in a magnitude number."},
-  {"id":49,"category":"第2章 Part 1: Measurement of Earthquakes (地震の測定)","no":"⑩","jp":"これらの要因は、地震によって引き起こされる被害の量にも影響を与える可能性があります。","en":"These factors can also affect the amount of damage caused by the earthquake."},
-  {"id":50,"category":"第2章 Part 1: Measurement of Earthquakes (地震の測定)","no":"⑪","jp":"しかし、最大の地震が常に最も悲惨であるとは限りません。","en":"However, the largest earthquakes are not always the most disastrous."},
-  {"id":51,"category":"第2章 Part 1: Measurement of Earthquakes (地震の測定)","no":"⑫","jp":"たとえ地震のマグニチュードが大きくても、震源や震央から遠ければ遠いほど、感じる揺れは小さくなります。","en":"Even if the magnitude of the earthquake is strong, the further you are from its focus or epicenter, the less shaking you will feel."},
-  {"id":52,"category":"第2章 Part 1: Measurement of Earthquakes (地震の測定)","no":"⑬","jp":"もしあなたが地震の震源の真上にいた場合、あなたのいる地域は壊滅的な被害を受けるかもしれません。","en":"If you were directly above the focus of the earthquake, the area you are in might suffer catastrophic damage."},
-  {"id":53,"category":"第2章 Part 2: P-waves and S-waves (P波とS波)","no":"①","jp":"地震は地震波と呼ばれる衝撃波を発生させます。","en":"Earthquakes produce shockwaves called seismic waves."},
-  {"id":54,"category":"第2章 Part 2: P-waves and S-waves (P波とS波)","no":"②","jp":"地震波には2つの種類があり、地中をどのように伝わるかによって異なります。","en":"There are two types of seismic waves, which vary depending on how they travel through the earth."},
-  {"id":55,"category":"第2章 Part 2: P-waves and S-waves (P波とS波)","no":"③","jp":"より速いものは縦波で、初期波、略してP波と呼ばれます。","en":"The faster ones are longitudinal waves called primary waves, or P-waves for short."},
-  {"id":56,"category":"第2章 Part 2: P-waves and S-waves (P波とS波)","no":"④","jp":"P波は固い岩石の中を毎秒5から7キロメートルもの速さで伝わります。","en":"P-waves propagate as fast as 5 to 7 kilometers per second through solid rock."},
-  {"id":57,"category":"第2章 Part 2: P-waves and S-waves (P波とS波)","no":"⑤","jp":"P波の後に続く揺れは二次波、略してS波と呼ばれます。","en":"The tremors that follow the P-waves are secondary waves, or S-waves for short."},
-  {"id":58,"category":"第2章 Part 2: P-waves and S-waves (P波とS波)","no":"⑥","jp":"それらは横波であり、その速度は伝わる物質によって毎秒3から4キロメートルの幅があります。","en":"They are transverse waves, whose velocity ranges from 3 to 4 kilometers per second depending on the material through which they travel."},
-  {"id":59,"category":"第2章 Part 2: P-waves and S-waves (P波とS波)","no":"⑦","jp":"S波は固体物質のみを伝わりますが、P波は固体、液体、気体のいずれも伝わります。","en":"S-waves propagate only through solid materials while P-waves propagate through either solid, liquid or gas."},
-  {"id":60,"category":"第2章 Part 2: P-waves and S-waves (P波とS波)","no":"⑧","jp":"地震が発生すると、まず弱い揺れを感じ、それに続いて強い揺れが起こります。","en":"When an earthquake occurs, we first feel weak shakes followed by a strong shake."},
-  {"id":61,"category":"第2章 Part 2: P-waves and S-waves (P波とS波)","no":"⑨","jp":"最初の小さな揺れは初期微動と呼ばれ、P波によって引き起こされます。","en":"The first small shakes are called preliminary tremors, which are caused by the P-waves."},
-  {"id":62,"category":"第2章 Part 2: P-waves and S-waves (P波とS波)","no":"⑩","jp":"強い揺れは主要動と呼ばれ、S波によって引き起こされます。","en":"The strong shakes are called the principal shock, which are caused by S-waves."},
-  {"id":63,"category":"第2章 Part 2: P-waves and S-waves (P波とS波)","no":"⑪","jp":"一連の地震の中で、最大のものは本震と呼ばれます。","en":"In a series of earthquakes, the largest one is termed the main shock."},
-  {"id":64,"category":"第2章 Part 2: P-waves and S-waves (P波とS波)","no":"⑫","jp":"本震の後に続く地震は余震と呼ばれます。","en":"Earthquakes that follow the main shock are called aftershocks."},
-  {"id":65,"category":"第2章 Part 2: P-waves and S-waves (P波とS波)","no":"⑬","jp":"本震に先行するより小さな地震は前震と呼ばれます。","en":"Smaller earthquakes that precede the main shock are called foreshocks."},
-  {"id":66,"category":"第2章 Part 3: Earthquake Information (地震情報)","no":"①","jp":"地震が発生したとき、震央からの距離はP波とS波の到着のタイムラグ(時間差)によって決定することができます。","en":"When an earthquake occurs, the distance from the epicenter can be determined by the time lag between the arrival of the P- and S-waves."},
-  {"id":67,"category":"第2章 Part 3: Earthquake Information (地震情報)","no":"②","jp":"このタイムラグは震央からの距離に比例します。","en":"This time lag is proportional to the distance from the epicenter."},
-  {"id":68,"category":"第2章 Part 3: Earthquake Information (地震情報)","no":"③","jp":"日本全国の多くの場所に、何千もの地震計が設置されています。","en":"Thousands of seismometers have been installed in many locations all over Japan."},
-  {"id":69,"category":"第2章 Part 3: Earthquake Information (地震情報)","no":"④","jp":"日本国内またはその周辺のどこかで地震が発生すると、気象庁は緊急地震速報と呼ばれる警報を発令するために、震源に近い地震計からのデータを分析します。","en":"When an earthquake occurs somewhere in or around Japan, the Japan Meteorological Agency analyzes the data from the seismometers near the focus in order to issue an alert called the earthquake early warning."},
-  {"id":70,"category":"第2章 Part 3: Earthquake Information (地震情報)","no":"⑤","jp":"この警報は、二次波(S波)によって引き起こされる強い揺れの可能性を私たちに知らせてくれます。","en":"This warning lets us know the possibility of strong tremors caused by the secondary wave."},
-  {"id":71,"category":"第2章 Part 3: Earthquake Information (地震情報)","no":"⑥","jp":"しかし、もし震央に非常に近い場所にいる場合、強い揺れは警報よりも前に到着します。","en":"However, if you are very close to the epicenter, the strong tremors will arrive before the warning."},
-  {"id":72,"category":"第2章 Part 3: Earthquake Information (地震情報)","no":"⑦","jp":"したがって、もし建物の中にいて強い地震を感じたら、落下物から身を守るためにすぐにテーブルや机の下に潜るべきです。","en":"So, if you are inside of a building and feel a strong earthquake, you should immediately get under a table or desk to protect yourself from falling objects."},
-  {"id":73,"category":"第2章 Part 3: Earthquake Information (地震情報)","no":"⑧","jp":"どのような非常事態においても、常に情報を得ている状態にしておくことが非常に重要です。","en":"It is very important to stay informed during any emergency situation."},
-  {"id":74,"category":"第2章 Part 3: Earthquake Information (地震情報)","no":"⑨","jp":"さらに、私たちが住んでいる場所の地下の状況についてあらかじめ学んでおかなければなりません。","en":"In addition, we have to learn in advance about the underground conditions of the site we live in."},
-  {"id":75,"category":"第2章 Part 3: Earthquake Information (地震情報)","no":"⑩","jp":"浅い直下型(内陸)の震源を持ち、活断層に沿って地震が発生した場合、それがどれほど破壊的なものになるか、私たちはすでに知っているのです。","en":"We already know how destructive an earthquake can be when it has a shallow inland focus and occurs along an active fault."},
+  ...makeSentenceGroup("Lesson 6: Earthquake Information（地震情報）", [
+    [
+      "When an earthquake occurs, the distance from the epicenter can be determined by the time lag between the arrival of the P- and S-waves.",
+      "地震が発生すると、震央からの距離は、P波とS波の到着のタイムラグ（時間差）によって決定することができます。",
+    ],
+    [
+      "This time lag is proportional to the distance from the epicenter.",
+      "このタイムラグは震央からの距離に比例します。",
+    ],
+    [
+      "Thousands of seismometers have been installed in many locations all over Japan.",
+      "何千もの地震計が日本中の多くの場所に設置されています。",
+    ],
+    [
+      "When an earthquake occurs somewhere in or around Japan, the Japan Meteorological Agency analyzes the data from the seismometers near the focus in order to issue an alert called the earthquake early warning.",
+      "日本国内やその周辺のどこかで地震が発生すると、気象庁は「緊急地震速報」と呼ばれる警報を発令するために、震源近くの地震計からのデータを分析します。",
+    ],
+    [
+      "This warning lets us know the possibility of strong tremors caused by the secondary wave.",
+      "この警報は、S波（第二波）によって引き起こされる強い揺れの可能性を私たちに知らせてくれます。",
+    ],
+    [
+      "However, if you are very close to the epicenter, the strong tremors will arrive before the warning.",
+      "しかし、もし震央に非常に近い場所にいる場合、強い揺れは警報よりも前に到達してしまいます。",
+    ],
+    [
+      "So, if you are inside of a building and feel a strong earthquake, you should immediately get under a table or desk to protect yourself from falling objects.",
+      "そのため、もし建物の中にいて強い地震を感じたら、落下物から身を守るために、すぐにテーブルや机の下に隠れるべきです。",
+    ],
+    [
+      "It is very important to stay informed during any emergency situation.",
+      "どのような緊急事態においても、常に情報を得ておくことが非常に重要です。",
+    ],
+    [
+      "In addition, we have to learn in advance about the underground conditions of the site we live in.",
+      "さらに、私たちが住んでいる場所の地下の状態について、事前に学んでおかなければなりません。",
+    ],
+    [
+      "We already know how destructive an earthquake can be when it has a shallow inland focus and occurs along an active fault.",
+      "浅い直下型の震源を持ち、活断層に沿って地震が発生した場合、それがどれほど破壊的なものになり得るかを私たちはすでに知っているのです。",
+    ],
+  ]),
+
+  ...makeSentenceGroup("Lesson 6 Part 4: The Ring of Fire（環太平洋火山帯）", [
+    [
+      "The earth has a layered structure, including the core, mantle and crust.",
+      "地球は、コア（核）、マントル、地殻を含む多層構造を持っています。",
+    ],
+    [
+      "The crust, which is the closest to the earth's surface, is not a single solid shell but rather broken up into huge, thick plates called tectonic plates.",
+      "地球の表面に最も近い地殻は、一つの硬い殻ではなく、テクトニック・プレートと呼ばれる巨大で厚いプレートに分かれています。",
+    ],
+    [
+      "So, what is it that makes Japan so seismically active?",
+      "では、日本をこれほど地震が活発な国にしているのは何なのでしょうか。",
+    ],
+    [
+      "Japan is located along the Pacific Ring of Fire.",
+      "日本は環太平洋火山帯（リング・オブ・ファイア）に沿って位置しています。",
+    ],
+    [
+      "According to scientists, the Ring of Fire includes about 75 percent of the world's active volcanoes and is also responsible for 90 percent of the world's earthquakes.",
+      "科学者たちによると、この火山帯には世界の活火山の約75パーセントが含まれており、また世界の地震の90パーセントの原因でもあります。",
+    ],
+    [
+      "This is because the Ring is the location of most of the earth's subduction zones, where one plate bends and slides underneath the other, curving down into the mantle.",
+      "これは、この火山帯が地球の沈み込み帯の大部分を占めており、そこで一方のプレートが曲がり、もう一方のプレートの下に滑り込んでマントルへと沈み込んでいるからです。",
+    ],
+    [
+      "Around the Japanese archipelago, the plates on the Pacific side are sinking under the plates on the continental side.",
+      "日本列島の周辺では、太平洋側のプレートが大陸側のプレートの下に沈み込んでいます。",
+    ],
+    [
+      "This causes the plate on the continental side to warp.",
+      "これによって大陸側のプレートにゆがみが生じます。",
+    ],
+    [
+      "When the warping reaches its limit, the plate breaks and rebounds to produce faults and cause earthquakes.",
+      "ゆがみが限界に達すると、プレートが壊れて反発し、断層を生じさせて地震を引き起こすのです。",
+    ],
+    [
+      "Although major faults mainly form at the plate boundaries between tectonic plates, earthquakes occur not only at the boundaries but also inside the plates.",
+      "主要な断層は主にテクトニック・プレート間の境界に形成されますが、地震は境界だけでなくプレートの内部でも発生します。",
+    ],
+  ]),
+
+  ...makeSentenceGroup("Lesson 9 Part 1: Combination and Decomposition（結合と分解）", [
+    [
+      "A chemical reaction is a process in which one or more substances are converted to one or more different substances.",
+      "化学反応とは、一つまたは複数の物質が、異なる物質に変換されるプロセスのことです。",
+    ],
+    [
+      "The substances that react together are called the reactants, and the substances that are formed as a result of the reaction are called the products.",
+      "互いに反応する物質は反応物と呼ばれ、反応の結果として作られる物質は生成物と呼ばれます。",
+    ],
+    [
+      "Reactants and products are either chemical elements or compounds.",
+      "反応物と生成物は、化学的な元素か化合物のいずれかです。",
+    ],
+    [
+      "The atoms in a compound are chemically combined by strong forces called bonds.",
+      "化合物の中の原子は、結合と呼ばれる強い力によって化学的に結びついています。",
+    ],
+    [
+      "This makes the properties of a compound different from the elements it contains.",
+      "このため、化合物の性質は、そこに含まれる元素の性質とは異なります。",
+    ],
+    [
+      "One of the major chemical reactions is a combination reaction, where two or more reactants combine to form a single product.",
+      "主要な化学反応の一つに結合（化合）反応があり、そこでは2つ以上の反応物が結合して単一の生成物を作ります。",
+    ],
+    [
+      "When a combination reaction is used to produce a desired product, that process is called the synthesis of that product.",
+      "目的の生成物を作るために結合反応が用いられる場合、そのプロセスはその生成物の合成と呼ばれます。",
+    ],
+    [
+      "Synthesis can result in the formation of more than one product.",
+      "合成によって複数の生成物が形成される場合もあります。",
+    ],
+    [
+      "Many materials are synthesized from chemicals derived from various sources.",
+      "多くの物質は、さまざまな原料に由来する化学物質から合成されています。",
+    ],
+    [
+      "Another major chemical reaction is decomposition, where a substance splits into two or more simpler substances.",
+      "もう一つの主要な化学反応は分解であり、そこでは物質が2つ以上のより単純な物質に分かれます。",
+    ],
+    [
+      "In some cases, the reactant breaks down into its component elements, and in other cases, they may break down into smaller molecules.",
+      "反応物が構成元素に分解される場合もあれば、より小さな分子に分解される場合もあります。",
+    ],
+  ]),
+
+  ...makeSentenceGroup("Lesson 9 Part 2: Oxidation and Reduction（酸化と還元）", [
+    [
+      "Oxidation is the reaction of a substance with oxygen or the addition of oxygen to a substance in a reaction.",
+      "酸化とは、物質が酸素と反応すること、あるいは反応において物質に酸素が付加されることです。",
+    ],
+    [
+      "Reduction, on the other hand, is the reaction of the removal of oxygen from a substance.",
+      "一方、還元とは、物質から酸素を取り除く反応のことです。",
+    ],
+    [
+      "Oxidation and reduction always occur at the same time.",
+      "酸化と還元は常に同時に起こります。",
+    ],
+    [
+      "The set of these reactions is called the oxidation-reduction reaction, or redox reaction for short.",
+      "これらの反応のセットは酸化還元反応、略してレドックス（redox）反応と呼ばれます。",
+    ],
+    ["Let's take an example.", "例を挙げてみましょう。"],
+    [
+      "When you heat copper in air at around 300 to 800°C, the copper reacts with oxygen and a black material called copper(II) oxide is formed.",
+      "空気中で約300〜800℃で銅を加熱すると、銅は酸素と反応し、酸化銅(II)と呼ばれる黒い物質が形成されます。",
+    ],
+    ["This is an oxidation reaction.", "これが酸化反応です。"],
+    [
+      "Then when you heat the copper(II) oxide in hydrogen gas, the hydrogen combines with the oxygen of the copper(II) oxide and produces water, with copper metal remaining.",
+      "次に、その酸化銅(II)を水素ガス中で加熱すると、水素が酸化銅(II)の酸素と結びついて水を生成し、金属の銅が残ります。",
+    ],
+    ["This process is reduction.", "このプロセスが還元です。"],
+    [
+      "Oxidation and reduction can also be explained in terms of electrons.",
+      "酸化と還元は、電子の観点からも説明することができます。",
+    ],
+    [
+      "In case of the redox reaction of copper(II) oxide in terms of electron transfer, copper loses electrons and the electrons that copper loses are accepted by the oxygen.",
+      "電子移動の観点から酸化銅(II)の酸化還元反応を見た場合、銅は電子を失い、その銅が失った電子を酸素が受け取ります。",
+    ],
+    [
+      "In this case, the copper is oxidized, and the oxygen is reduced.",
+      "この場合、銅は酸化され、酸素は還元されたことになります。",
+    ],
+    [
+      "In other words, oxidation is a loss of electrons and reduction is a gain of electrons.",
+      "言い換えれば、酸化とは電子を失うことであり、還元とは電子を得ることなのです。",
+    ],
+  ]),
+
+  ...makeSentenceGroup("Lesson 9 Part 3: Oxidizing and Reducing Agents（酸化剤と還元剤）", [
+    [
+      "Oxidation and reduction as loss and gain of electrons between the substances can explain reactions in which oxygen is not involved.",
+      "物質間での電子の喪失と獲得としての酸化と還元は、酸素が関与しない反応を説明することができます。",
+    ],
+    [
+      "Let's look at the example of the redox reaction of copper(II) sulfate, which consists of copper and sulfate instead of oxygen.",
+      "酸素の代わりに銅と硫酸塩（硫酸イオン）から構成される、硫酸銅(II)の酸化還元反応の例を見てみましょう。",
+    ],
+    [
+      "When we place a zinc plate into a solution of copper(II) sulfate, both copper and sulfate exist as ions.",
+      "硫酸銅(II)の水溶液の中に亜鉛板を入れると、銅も硫酸塩もイオンとして存在しています。",
+    ],
+    [
+      "Then, zinc metal displaces copper ions, producing copper metal and a solution of zinc sulfate.",
+      "その後、金属の亜鉛が銅イオンと置き換わり、金属の銅と硫酸亜鉛の水溶液を作り出します。",
+    ],
+    [
+      "You see that the zinc atoms have lost electrons and have formed positively charged zinc ions.",
+      "亜鉛原子が電子を失って、プラスに帯電した亜鉛イオンを形成しているのがわかるでしょう。",
+    ],
+    [
+      "At the same time, when the zinc atoms have been oxidized, the zinc atoms have reduced the copper ions.",
+      "同時に、亜鉛原子が酸化されたとき、その亜鉛原子は銅イオンを還元しているのです。",
+    ],
+    [
+      "In a redox reaction, the substance which donates the electrons to another element or ions is called a reducing agent.",
+      "酸化還元反応において、他の元素やイオンに電子を与える物質は還元剤と呼ばれます。",
+    ],
+    [
+      "Alkali metals are the strongest reducing agents because they lose electrons very easily.",
+      "アルカリ金属は非常に容易に電子を失うため、最強の還元剤となります。",
+    ],
+    [
+      "The substance which accepts the electrons is called an oxidizing agent.",
+      "電子を受け取る物質は酸化剤と呼ばれます。",
+    ],
+    [
+      "Common oxidizing agents are oxygen, hydrogen peroxide and the halogens.",
+      "一般的な酸化剤には、酸素、過酸化水素、およびハロゲンがあります。",
+    ],
+    [
+      "In the example of the redox reaction of copper(II) sulfate above, zinc is the reducing agent and copper is the oxidizing agent.",
+      "上記の硫酸銅(II)の酸化還元反応の例では、亜鉛が還元剤であり、銅が酸化剤です。",
+    ],
+  ]),
 ];
 
 export default sentenceData;
