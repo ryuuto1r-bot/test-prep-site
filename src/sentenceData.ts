@@ -1,3 +1,5 @@
+import { getSentenceVocabulary } from "./sentenceVocabulary";
+
 type SentencePair = [english: string, japanese: string];
 
 const circledNumbers = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩", "⑪", "⑫", "⑬"];
@@ -10,6 +12,7 @@ const makeSentenceGroup = (category: string, pairs: SentencePair[]) =>
     no: circledNumbers[index] || String(index + 1),
     en,
     jp,
+    vocabulary: getSentenceVocabulary(en),
   }));
 
 const sentenceData = [

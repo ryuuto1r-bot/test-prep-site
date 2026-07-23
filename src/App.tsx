@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, RotateCcw, Shuffle, BookOpen, ListChecks, Languages } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, RotateCcw, Shuffle, BookOpen, ListChecks, Languages } from 'lucide-react';
 import sentenceData from './sentenceData';
 import updatedFlashcardsData from './flashcardsData';
 
@@ -220,6 +220,7 @@ export default function App() {
   const [availableGroups, setAvailableGroups] = useState([]);
   const [orderResult, setOrderResult] = useState(null);
   const [revealedSentences, setRevealedSentences] = useState([]);
+  const [revealedVocabulary, setRevealedVocabulary] = useState([]);
   const [sentenceDirection, setSentenceDirection] = useState("enToJp");
   
   // スワイプ操作用の状態
@@ -268,6 +269,7 @@ export default function App() {
     setCurrentIndex(0);
     setIsFlipped(false);
     setRevealedSentences([]);
+    setRevealedVocabulary([]);
     if (mode === "order") setupOrderQuestion(nextCards[0]);
   };
 
@@ -278,6 +280,7 @@ export default function App() {
     setCards(newCards);
     setCurrentIndex(0);
     setRevealedSentences([]);
+    setRevealedVocabulary([]);
   };
 
   const handleNext = () => {
@@ -303,6 +306,7 @@ export default function App() {
     setCards(shuffled);
     setCurrentIndex(0);
     setRevealedSentences([]);
+    setRevealedVocabulary([]);
   };
 
   // ★修正: 選択中のカテゴリ内でリセットするように変更
@@ -311,6 +315,7 @@ export default function App() {
     setCards(currentPool);
     setCurrentIndex(0);
     setRevealedSentences([]);
+    setRevealedVocabulary([]);
   };
 
   // スワイプ処理
@@ -381,6 +386,14 @@ export default function App() {
 
   const revealAllSentences = () => {
     setRevealedSentences(cards.map(sentence => sentence.id));
+  };
+
+  const toggleVocabulary = (id) => {
+    setRevealedVocabulary(
+      revealedVocabulary.includes(id)
+        ? revealedVocabulary.filter(sentenceId => sentenceId !== id)
+        : [...revealedVocabulary, id]
+    );
   };
 
   const currentCard = cards[currentIndex];
@@ -504,6 +517,7 @@ export default function App() {
                 onClick={() => {
                   setSentenceDirection("enToJp");
                   setRevealedSentences([]);
+                  setRevealedVocabulary([]);
                 }}
                 className={`rounded-lg py-2 text-sm font-bold transition-colors ${
                   isEnglishToJapanese
@@ -517,6 +531,7 @@ export default function App() {
                 onClick={() => {
                   setSentenceDirection("jpToEn");
                   setRevealedSentences([]);
+                  setRevealedVocabulary([]);
                 }}
                 className={`rounded-lg py-2 text-sm font-bold transition-colors ${
                   !isEnglishToJapanese
@@ -556,36 +571,76 @@ export default function App() {
           <div className="space-y-3">
             {cards.map(sentence => {
               const isRevealed = revealedSentences.includes(sentence.id);
+              const isVocabularyRevealed = revealedVocabulary.includes(sentence.id);
               const promptText = isEnglishToJapanese ? sentence.en : sentence.jp;
               const answerText = isEnglishToJapanese ? sentence.jp : sentence.en;
 
               return (
-                <button
+                <article
                   key={sentence.id}
-                  onClick={() => toggleSentence(sentence.id)}
-                  className={`w-full rounded-2xl border p-4 text-left shadow-sm transition-colors ${
+                  className={`overflow-hidden rounded-2xl border text-left shadow-sm transition-colors ${
                     isRevealed
                       ? 'border-emerald-200 bg-emerald-50'
-                      : 'border-slate-200 bg-white hover:border-emerald-200 hover:bg-emerald-50/50'
+                      : 'border-slate-200 bg-white'
                   }`}
                 >
-                  <div className="mb-2 flex items-center justify-between gap-3">
-                    <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-emerald-700 shadow-sm">
-                      {sentence.no}
-                    </span>
-                    <span className="text-xs font-bold text-slate-400">
-                      {isRevealed
-                        ? (isEnglishToJapanese ? '和訳表示中' : '英文表示中')
-                        : (isEnglishToJapanese ? 'タップで和訳' : 'タップで英文')}
-                    </span>
+                  <button
+                    type="button"
+                    onClick={() => toggleSentence(sentence.id)}
+                    className="w-full p-4 text-left transition-colors hover:bg-emerald-50/60"
+                  >
+                    <div className="mb-2 flex items-center justify-between gap-3">
+                      <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-emerald-700 shadow-sm">
+                        {sentence.no}
+                      </span>
+                      <span className="text-xs font-bold text-slate-400">
+                        {isRevealed
+                          ? (isEnglishToJapanese ? '和訳表示中' : '英文表示中')
+                          : (isEnglishToJapanese ? 'タップで和訳' : 'タップで英文')}
+                      </span>
+                    </div>
+                    <p className="text-base font-bold leading-relaxed text-slate-800">{promptText}</p>
+                    {isRevealed && (
+                      <p className="mt-4 rounded-xl bg-white p-3 text-base font-semibold leading-relaxed text-emerald-800 shadow-inner">
+                        {answerText}
+                      </p>
+                    )}
+                  </button>
+
+                  <div className="border-t border-slate-200 bg-white px-4 py-3">
+                    <button
+                      type="button"
+                      onClick={() => toggleVocabulary(sentence.id)}
+                      aria-expanded={isVocabularyRevealed}
+                      className="flex w-full items-center justify-between gap-3 text-left text-sm font-bold text-indigo-700"
+                    >
+                      <span className="flex items-center gap-2">
+                        <BookOpen className="h-4 w-4" />
+                        重要単語・熟語
+                      </span>
+                      <span className="flex items-center gap-1 text-xs text-slate-500">
+                        {sentence.vocabulary.length}語
+                        {isVocabularyRevealed
+                          ? <ChevronUp className="h-4 w-4" />
+                          : <ChevronDown className="h-4 w-4" />}
+                      </span>
+                    </button>
+
+                    {isVocabularyRevealed && (
+                      <dl className="mt-3 divide-y divide-indigo-100 rounded-xl bg-indigo-50 px-3">
+                        {sentence.vocabulary.map(item => (
+                          <div
+                            key={`${sentence.id}-${item.word}`}
+                            className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] gap-3 py-2.5 text-sm"
+                          >
+                            <dt className="break-words font-bold text-indigo-900">{item.word}</dt>
+                            <dd className="break-words text-slate-700">{item.meaning}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    )}
                   </div>
-                  <p className="text-base font-bold leading-relaxed text-slate-800">{promptText}</p>
-                  {isRevealed && (
-                    <p className="mt-4 rounded-xl bg-white p-3 text-base font-semibold leading-relaxed text-emerald-800 shadow-inner">
-                      {answerText}
-                    </p>
-                  )}
-                </button>
+                </article>
               );
             })}
           </div>
