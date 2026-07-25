@@ -377,17 +377,17 @@ const unsortedFlashcardsData: Card[] = [
   ),
   makeCard(
     lesson9Part2,
-    "【withを使う英作文】\n4試合を残し、当地区には優勝する可能性のあるチームがまだ5つある。",
+    "【withを使って1文にする】\n次の2文を、付帯状況を表す with を使って1文にしましょう。\n\nOur district still has five teams that could win the title.\nFour games remain.\n\n和訳：4試合を残し、当地区には優勝する可能性のあるチームがまだ5つある。",
     "Our district still has five teams that could win the title with four games remaining.",
     "4試合を残し、当地区には優勝する可能性のあるチームがまだ5つある。",
-    "with + 名詞 + 現在分詞で付帯状況を表します。",
+    "Four games remain. の four games を with の後ろに置き、remain を現在分詞 remaining に変えます。",
   ),
   makeCard(
     lesson9Part2,
-    "【withを使う英作文】\nその都市の成長は加速し続けており、この10年間に20パーセント人口が増えた。",
+    "【withを使って1文にする】\n次の2文を、付帯状況を表す with を使って1文にしましょう。\n\nThe city's growth has been accelerating.\nIts population has increased 20 percent in the last decade.\n\n和訳：その都市の成長は加速し続けており、この10年間に20パーセント人口が増えた。",
     "The city's growth has been accelerating with its population increasing 20 percent in the last decade.",
     "その都市の成長は加速し続けており、この10年間に20パーセント人口が増えた。",
-    "with its population increasing ... で付帯状況を表します。",
+    "Its population has increased ... の its population を with の後ろに置き、動詞を increasing に変えます。",
   ),
 
   ...makeWordCards(lesson9Words, [
