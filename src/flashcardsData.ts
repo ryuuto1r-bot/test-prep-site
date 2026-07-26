@@ -7,7 +7,7 @@ type Card = {
   e: string;
 };
 
-type WordEntry = [word: string, meaning: string, note?: string];
+type WordEntry = [word: string, meaning: string, accent: string, note?: string];
 
 const lesson6 = "第2章 Part 3: Earthquake Information";
 const lesson6Part4 = "第2章 Part 4: The Ring of Fire";
@@ -21,13 +21,13 @@ const lesson9Words = "単語・アクセント (第3章)";
 let nextId = 1;
 
 const makeWordCards = (category: string, entries: WordEntry[]): Card[] =>
-  entries.map(([word, meaning, note]) => ({
+  entries.map(([word, meaning, accent, note]) => ({
     id: nextId++,
     category,
-    q: `【新出単語】\n${word}`,
-    a: meaning,
-    t: `${word}：${meaning}`,
-    e: note || "本文の新出単語。英語を見て意味を言えるように確認します。",
+    q: word,
+    a: accent,
+    t: meaning,
+    e: [note, "大文字部分が第一アクセントです。"].filter(Boolean).join(" "),
   }));
 
 const makeCard = (
@@ -40,22 +40,22 @@ const makeCard = (
 
 const unsortedFlashcardsData: Card[] = [
   ...makeWordCards(lesson6Words, [
-    ["lag", "遅れ、タイムラグ"],
-    ["arrival", "到着"],
-    ["seismometer", "地震計"],
-    ["install", "～を設置する"],
-    ["meteorological", "気象の", "Japan Meteorological Agency は「気象庁」。"],
-    ["agency", "機関、庁", "Japan Meteorological Agency は「気象庁」。"],
-    ["analyze", "～を分析する"],
-    ["alert", "警報"],
-    ["possibility", "可能性"],
-    ["informed", "情報に通じた", "stay informed で「情報を得続ける」。"],
-    ["emergency", "緊急事態"],
-    ["site", "場所、敷地"],
-    ["advance", "前進", "in advance で「事前に」。"],
-    ["destructive", "破壊的な"],
-    ["shallow", "浅い"],
-    ["fault", "断層"],
+    ["lag", "遅れ、タイムラグ", "LAG"],
+    ["arrival", "到着", "ar-RI-val"],
+    ["seismometer", "地震計", "seis-MOM-e-ter"],
+    ["install", "～を設置する", "in-STALL"],
+    ["meteorological", "気象の", "me-te-or-o-LOG-i-cal", "Japan Meteorological Agency は「気象庁」。"],
+    ["agency", "機関、庁", "A-gen-cy", "Japan Meteorological Agency は「気象庁」。"],
+    ["analyze", "～を分析する", "AN-a-lyze"],
+    ["alert", "警報", "a-LERT"],
+    ["possibility", "可能性", "pos-si-BIL-i-ty"],
+    ["informed", "情報に通じた", "in-FORMED", "stay informed で「情報を得続ける」。"],
+    ["emergency", "緊急事態", "e-MER-gen-cy"],
+    ["site", "場所、敷地", "SITE"],
+    ["advance", "前進", "ad-VANCE", "in advance で「事前に」。"],
+    ["destructive", "破壊的な", "de-STRUC-tive"],
+    ["shallow", "浅い", "SHAL-low"],
+    ["fault", "断層", "FAULT"],
   ]),
   makeCard(
     lesson6,
@@ -122,24 +122,24 @@ const unsortedFlashcardsData: Card[] = [
   ),
 
   ...makeWordCards(lesson6Words, [
-    ["layer", "層"],
-    ["structure", "構造"],
-    ["mantle", "マントル"],
-    ["crust", "地殻"],
-    ["shell", "殻"],
-    ["thick", "厚い"],
-    ["tectonic", "構造上の", "tectonic plates は「プレート」。"],
-    ["locate", "位置する"],
-    ["volcano", "火山"],
-    ["responsible", "原因となっている、責任がある"],
-    ["subduction", "沈み込み"],
-    ["zone", "地帯、区域"],
-    ["underneath", "～の下に"],
-    ["bend", "曲がる"],
-    ["archipelago", "群島、列島"],
-    ["warp", "ゆがむ、反る"],
-    ["rebound", "反発する、跳ね返る"],
-    ["boundary", "境界"],
+    ["layer", "層", "LAY-er"],
+    ["structure", "構造", "STRUC-ture"],
+    ["mantle", "マントル", "MAN-tle"],
+    ["crust", "地殻", "CRUST"],
+    ["shell", "殻", "SHELL"],
+    ["thick", "厚い", "THICK"],
+    ["tectonic", "構造上の", "tec-TON-ic", "tectonic plates は「プレート」。"],
+    ["locate", "位置する", "LO-cate"],
+    ["volcano", "火山", "vol-CA-no"],
+    ["responsible", "原因となっている、責任がある", "re-SPON-si-ble"],
+    ["subduction", "沈み込み", "sub-DUC-tion"],
+    ["zone", "地帯、区域", "ZONE"],
+    ["underneath", "～の下に", "un-der-NEATH"],
+    ["bend", "曲がる", "BEND"],
+    ["archipelago", "群島、列島", "ar-chi-PEL-a-go"],
+    ["warp", "ゆがむ、反る", "WARP"],
+    ["rebound", "反発する、跳ね返る", "re-BOUND"],
+    ["boundary", "境界", "BOUND-a-ry"],
   ]),
   makeCard(
     lesson6Part4,
@@ -199,14 +199,14 @@ const unsortedFlashcardsData: Card[] = [
   ),
 
   ...makeWordCards(lesson9Words, [
-    ["combination", "結合、化合"],
-    ["decomposition", "分解"],
-    ["reactant", "反応物"],
-    ["desire", "～を強く望む", "desired は「目的の、望ましい」。"],
-    ["synthesis", "合成"],
-    ["formation", "形成"],
-    ["synthesize", "～を合成する"],
-    ["derive", "～を引き出す、由来する"],
+    ["combination", "結合、化合", "com-bi-NA-tion"],
+    ["decomposition", "分解", "de-com-po-SI-tion"],
+    ["reactant", "反応物", "re-ACT-ant"],
+    ["desire", "～を強く望む", "de-SIRE", "desired は「目的の、望ましい」。"],
+    ["synthesis", "合成", "SYN-the-sis"],
+    ["formation", "形成", "for-MA-tion"],
+    ["synthesize", "～を合成する", "SYN-the-size"],
+    ["derive", "～を引き出す、由来する", "de-RIVE"],
   ]),
   makeCard(
     lesson9Part1,
@@ -294,16 +294,16 @@ const unsortedFlashcardsData: Card[] = [
   ),
 
   ...makeWordCards(lesson9Words, [
-    ["oxidation", "酸化"],
-    ["reduction", "還元"],
-    ["removal", "除去、取り除くこと"],
-    ["redox", "酸化還元", "redox reaction は「酸化還元反応」。"],
-    ["oxide", "酸化物"],
-    ["explain", "～を説明する"],
-    ["accept", "～を受け取る"],
-    ["oxidize", "～を酸化する"],
-    ["reduce", "～を還元する、減らす"],
-    ["loss", "喪失、失うこと"],
+    ["oxidation", "酸化", "ox-i-DA-tion"],
+    ["reduction", "還元", "re-DUC-tion"],
+    ["removal", "除去、取り除くこと", "re-MOV-al"],
+    ["redox", "酸化還元", "RE-dox", "redox reaction は「酸化還元反応」。"],
+    ["oxide", "酸化物", "OX-ide"],
+    ["explain", "～を説明する", "ex-PLAIN"],
+    ["accept", "～を受け取る", "ac-CEPT"],
+    ["oxidize", "～を酸化する", "OX-i-dize"],
+    ["reduce", "～を還元する、減らす", "re-DUCE"],
+    ["loss", "喪失、失うこと", "LOSS"],
   ]),
   makeCard(
     lesson9Part2,
@@ -391,12 +391,12 @@ const unsortedFlashcardsData: Card[] = [
   ),
 
   ...makeWordCards(lesson9Words, [
-    ["zinc", "亜鉛"],
-    ["displace", "～を置き換える、置換する"],
-    ["donate", "～を与える、供与する"],
-    ["agent", "物質、剤", "reducing agent は「還元剤」、oxidizing agent は「酸化剤」。"],
-    ["peroxide", "過酸化物", "hydrogen peroxide は「過酸化水素」。"],
-    ["halogen", "ハロゲン"],
+    ["zinc", "亜鉛", "ZINC"],
+    ["displace", "～を置き換える、置換する", "dis-PLACE"],
+    ["donate", "～を与える、供与する", "DO-nate"],
+    ["agent", "物質、剤", "A-gent", "reducing agent は「還元剤」、oxidizing agent は「酸化剤」。"],
+    ["peroxide", "過酸化物", "per-OX-ide", "hydrogen peroxide は「過酸化水素」。"],
+    ["halogen", "ハロゲン", "HAL-o-gen"],
   ]),
   makeCard(
     lesson9Part3,
@@ -448,12 +448,6 @@ const unsortedFlashcardsData: Card[] = [
     "compounds like A and B を主語にして、are released into the air と続けます。",
   ),
 
-  makeCard(lesson9Words, "【アクセント】\nreactant", "re-AC-tant", "reactant：反応物", "大文字部分 AC を最も強く読みます。"),
-  makeCard(lesson9Words, "【アクセント】\nproduct", "PROD-uct", "product：生成物", "大文字部分 PROD を最も強く読みます。"),
-  makeCard(lesson9Words, "【アクセント】\ncombination", "com-bi-NA-tion", "combination：結合、化合", "大文字部分 NA を最も強く読みます。"),
-  makeCard(lesson9Words, "【アクセント】\ndecomposition", "de-com-po-SI-tion", "decomposition：分解", "大文字部分 SI を最も強く読みます。"),
-  makeCard(lesson9Words, "【アクセント】\nsynthesize", "SYN-the-size", "synthesize：～を合成する", "大文字部分 SYN を最も強く読みます。"),
-  makeCard(lesson9Words, "【アクセント】\nderive", "de-RIVE", "derive：～を引き出す、由来する", "大文字部分 RIVE を最も強く読みます。"),
   makeCard(workbook9Part1, "【単語選択】\nIn a ( ) reaction, substances combine to form a compound.", "combination", "結合反応では、物質が結合して化合物を作る。", "combination reaction は「結合反応」。"),
   makeCard(workbook9Part1, "【単語選択】\nIn a ( ) reaction, a compound separates into the simpler substances.", "decomposition", "分解反応では、化合物がより単純な物質に分かれる。", "decomposition reaction は「分解反応」。"),
   makeCard(workbook9Part1, "【単語選択】\nA ( ) is a substance that participates in a chemical reaction.", "reactant", "反応物とは、化学反応に参加する物質である。", "reactant は「反応物」。"),

@@ -400,6 +400,7 @@ export default function App() {
   // カードが存在しない場合（安全対策）
   if (!currentCard) return null;
 
+  const isAccentCard = currentCard.category.startsWith("単語・アクセント");
   const progress = studyMode === "sentences" ? 100 : ((currentIndex + 1) / cards.length) * 100;
   const currentOrder = studyMode === "order" ? parseOrderCard(currentCard) : null;
   const isOrderComplete = currentOrder
@@ -782,9 +783,11 @@ export default function App() {
             {!isFlipped ? (
               // 表面（問題）
               <div className="w-full animate-in fade-in zoom-in-95 duration-200">
-                <span className="block text-sm font-bold text-slate-400 mb-4 tracking-widest">QUESTION</span>
+                <span className="block text-sm font-bold text-slate-400 mb-4 tracking-widest">
+                  {isAccentCard ? 'WORD' : 'QUESTION'}
+                </span>
                 {currentCard.q.split('\n').map((line, idx) => (
-                  <p key={idx} className={`text-lg font-medium text-slate-700 leading-relaxed ${idx === 0 ? 'mb-4' : ''}`}>
+                  <p key={idx} className={`${isAccentCard ? 'text-3xl font-bold' : 'text-lg font-medium'} text-slate-700 leading-relaxed ${idx === 0 && !isAccentCard ? 'mb-4' : ''}`}>
                     {line}
                   </p>
                 ))}
@@ -793,18 +796,24 @@ export default function App() {
             ) : (
               // 裏面（解答・解説）
               <div className="w-full animate-in fade-in zoom-in-95 duration-200">
-                <span className="block text-sm font-bold text-emerald-500 mb-2 tracking-widest">ANSWER</span>
+                <span className="block text-sm font-bold text-emerald-500 mb-2 tracking-widest">
+                  {isAccentCard ? 'FIRST ACCENT' : 'ANSWER'}
+                </span>
                 <p className="text-2xl font-bold text-slate-800 mb-6 bg-emerald-50 py-2 px-4 rounded-lg inline-block">
                   {currentCard.a}
                 </p>
                 
                 <div className="text-left w-full space-y-4">
                   <div>
-                    <h3 className="text-xs font-bold text-slate-400 uppercase mb-1 border-b pb-1">和訳</h3>
+                    <h3 className="text-xs font-bold text-slate-400 uppercase mb-1 border-b pb-1">
+                      {isAccentCard ? '意味' : '和訳'}
+                    </h3>
                     <p className="text-sm text-slate-700 leading-relaxed">{currentCard.t}</p>
                   </div>
                   <div>
-                    <h3 className="text-xs font-bold text-slate-400 uppercase mb-1 border-b pb-1">解説</h3>
+                    <h3 className="text-xs font-bold text-slate-400 uppercase mb-1 border-b pb-1">
+                      {isAccentCard ? 'アクセントの見方' : '解説'}
+                    </h3>
                     <p className="text-sm text-slate-700 leading-relaxed">{currentCard.e}</p>
                   </div>
                 </div>
