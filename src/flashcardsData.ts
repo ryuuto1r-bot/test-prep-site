@@ -231,10 +231,10 @@ const unsortedFlashcardsData: Card[] = [
   ),
   makeCard(
     lesson9Part1,
-    "【読解・穴埋め】\nCombination and ( ) are examples of major chemical reactions.",
-    "decomposition",
+    "【読解・穴埋め】\n( ) and ( ) are examples of major chemical reactions.",
+    "Combination, decomposition",
     "結合反応と分解反応は主要な化学反応の例である。",
-    "本文で対比される2種類の反応を確認します。",
+    "Combination（結合反応）と decomposition（分解反応）の両方を入れます。",
   ),
   makeCard(
     lesson9Part1,

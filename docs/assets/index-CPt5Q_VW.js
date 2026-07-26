@@ -42,7 +42,7 @@ The earth's atmospheric layer has the ozone layer, [ absorbed / are / rays / the
 ( ) are substances that change into other substances through chemical reaction.`,"Reactants","反応物とは、化学反応によって別の物質に変化する物質である。","本文の reactants の定義を確認する問題です。"),C(at,`【読解・穴埋め】
 ( ) are substances that are formed as a result of chemical reaction.`,"Products","生成物とは、化学反応の結果として作られる物質である。","本文の products の定義を確認する問題です。"),C(at,`【読解・穴埋め】
 The ( ) of a compound are different from those of the elements it contains.`,"properties","化合物の性質は、その化合物に含まれる元素の性質とは異なる。","those は前にある properties を指します。"),C(at,`【読解・穴埋め】
-Combination and ( ) are examples of major chemical reactions.`,"decomposition","結合反応と分解反応は主要な化学反応の例である。","本文で対比される2種類の反応を確認します。"),C(at,`【読解・穴埋め】
+( ) and ( ) are examples of major chemical reactions.`,"Combination, decomposition","結合反応と分解反応は主要な化学反応の例である。","Combination（結合反応）と decomposition（分解反応）の両方を入れます。"),C(at,`【読解・穴埋め】
 The process of chemical reactions to produce a desirable material is called ( ).`,"synthesis","目的の物質を作る化学反応のプロセスは合成と呼ばれる。","synthesis は「合成」。"),C(at,`【穴埋め】
 化学反応とは、そこで一つあるいは複数の物質が他の物質に変換されるプロセスである。
 A chemical reaction is a process ( ) ( ) one or more substances are converted ( ) different substances.`,"in which, into","化学反応とは、そこで一つあるいは複数の物質が他の物質に変換されるプロセスである。","process in which ... と convert A into B を使います。"),C(at,`【穴埋め】
