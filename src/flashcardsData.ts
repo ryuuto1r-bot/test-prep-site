@@ -280,10 +280,10 @@ const unsortedFlashcardsData: Card[] = [
   ),
   makeCard(
     lesson9Part1,
-    "[並べ替え]\nどの酵素がデンプンを糖に分解するのに使われるのですか。\nWhich enzyme is used to [ break / down / into / starch / sugar ]?",
-    "[ break down starch into sugar ]",
+    "[並べ替え]\nどの酵素がデンプンを糖に分解するのに使われるのですか。\n[ break / Which / to / starch / is / enzyme / down / into / sugar / used ]?",
+    "[ Which enzyme is used to break down starch into sugar ]",
     "どの酵素がデンプンを糖に分解するのに使われるのですか。",
-    "break down A into B で「AをBに分解する」。",
+    "Which enzyme が主語、is used to が「～するために使われる」、break down A into B が「AをBに分解する」です。",
   ),
   makeCard(
     lesson9Part1,

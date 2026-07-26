@@ -55,7 +55,7 @@ Through ( ) reaction, a substance splits into ( ) ( ) ( ) simpler substances.`,"
 元素を互いに違うものにしているのは何ですか。
 [ different / each / elements / from / makes / other / what ]?`,"[ What makes elements different from each other ]","元素を互いに違うものにしているのは何ですか。","疑問詞 What が主語になり、makes elements different と続きます。"),C(at,`[並べ替え]
 どの酵素がデンプンを糖に分解するのに使われるのですか。
-Which enzyme is used to [ break / down / into / starch / sugar ]?`,"[ break down starch into sugar ]","どの酵素がデンプンを糖に分解するのに使われるのですか。","break down A into B で「AをBに分解する」。"),C(at,`[並べ替え]
+[ break / Which / to / starch / is / enzyme / down / into / sugar / used ]?`,"[ Which enzyme is used to break down starch into sugar ]","どの酵素がデンプンを糖に分解するのに使われるのですか。","Which enzyme が主語、is used to が「～するために使われる」、break down A into B が「AをBに分解する」です。"),C(at,`[並べ替え]
 整備不良は重大な事故を引き起こす故障につながる場合があります。
 Improper maintenance may [ trouble / accidents / causing / in / result / serious ].`,"[ result in trouble causing serious accidents ]","整備不良は重大な事故を引き起こす故障につながる場合があります。","result in ～ で「～につながる」。causing serious accidents が trouble を説明します。"),...Ur(Ot,[["oxidation","酸化"],["reduction","還元"],["removal","除去、取り除くこと"],["redox","酸化還元","redox reaction は「酸化還元反応」。"],["oxide","酸化物"],["explain","～を説明する"],["accept","～を受け取る"],["oxidize","～を酸化する"],["reduce","～を還元する、減らす"],["loss","喪失、失うこと"]]),C(ct,`【読解・穴埋め】
 Oxidation can be explained as ( ) of oxygen to a substance as well as a ( ) of electrons.`,"addition, loss","酸化は、物質への酸素の付加および電子の喪失として説明できる。","酸素では addition、電子では loss が酸化を表します。"),C(ct,`【読解・穴埋め】
