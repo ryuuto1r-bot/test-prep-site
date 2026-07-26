@@ -40,7 +40,6 @@ const makeCard = (
 
 const unsortedFlashcardsData: Card[] = [
   ...makeWordCards(lesson6Words, [
-    ["lag", "遅れ、タイムラグ", "LAG"],
     ["arrival", "到着", "ar-RI-val"],
     ["seismometer", "地震計", "seis-MOM-e-ter"],
     ["install", "～を設置する", "in-STALL"],
@@ -51,11 +50,9 @@ const unsortedFlashcardsData: Card[] = [
     ["possibility", "可能性", "pos-si-BIL-i-ty"],
     ["informed", "情報に通じた", "in-FORMED", "stay informed で「情報を得続ける」。"],
     ["emergency", "緊急事態", "e-MER-gen-cy"],
-    ["site", "場所、敷地", "SITE"],
     ["advance", "前進", "ad-VANCE", "in advance で「事前に」。"],
     ["destructive", "破壊的な", "de-STRUC-tive"],
     ["shallow", "浅い", "SHAL-low"],
-    ["fault", "断層", "FAULT"],
   ]),
   makeCard(
     lesson6,
@@ -125,19 +122,13 @@ const unsortedFlashcardsData: Card[] = [
     ["layer", "層", "LAY-er"],
     ["structure", "構造", "STRUC-ture"],
     ["mantle", "マントル", "MAN-tle"],
-    ["crust", "地殻", "CRUST"],
-    ["shell", "殻", "SHELL"],
-    ["thick", "厚い", "THICK"],
     ["tectonic", "構造上の", "tec-TON-ic", "tectonic plates は「プレート」。"],
     ["locate", "位置する", "LO-cate"],
     ["volcano", "火山", "vol-CA-no"],
     ["responsible", "原因となっている、責任がある", "re-SPON-si-ble"],
     ["subduction", "沈み込み", "sub-DUC-tion"],
-    ["zone", "地帯、区域", "ZONE"],
     ["underneath", "～の下に", "un-der-NEATH"],
-    ["bend", "曲がる", "BEND"],
     ["archipelago", "群島、列島", "ar-chi-PEL-a-go"],
-    ["warp", "ゆがむ、反る", "WARP"],
     ["rebound", "反発する、跳ね返る", "re-BOUND"],
     ["boundary", "境界", "BOUND-a-ry"],
   ]),
@@ -303,7 +294,6 @@ const unsortedFlashcardsData: Card[] = [
     ["accept", "～を受け取る", "ac-CEPT"],
     ["oxidize", "～を酸化する", "OX-i-dize"],
     ["reduce", "～を還元する、減らす", "re-DUCE"],
-    ["loss", "喪失、失うこと", "LOSS"],
   ]),
   makeCard(
     lesson9Part2,
@@ -391,7 +381,6 @@ const unsortedFlashcardsData: Card[] = [
   ),
 
   ...makeWordCards(lesson9Words, [
-    ["zinc", "亜鉛", "ZINC"],
     ["displace", "～を置き換える、置換する", "dis-PLACE"],
     ["donate", "～を与える、供与する", "DO-nate"],
     ["agent", "物質、剤", "A-gent", "reducing agent は「還元剤」、oxidizing agent は「酸化剤」。"],
